@@ -38,6 +38,7 @@ namespace LookingGlass.StatsDisplay
             Off,
             Same_On_Both,
             Different_On_Tab,
+            Only_Show_On_Main,
             Only_Show_On_Tab,
             Show_Only_Stats_On_Tab,
         }
@@ -234,7 +235,7 @@ namespace LookingGlass.StatsDisplay
 
         bool SecondaryDisabled()
         {
-            return statsDisplay.Value == StatsDisplayEnum.Same_On_Both;
+            return statsDisplay.Value == StatsDisplayEnum.Same_On_Both || statsDisplay.Value == StatsDisplayEnum.Only_Show_On_Main;
         }
         bool PrimaryDisabled()
         {
@@ -817,6 +818,10 @@ namespace LookingGlass.StatsDisplay
                         {
                             statTracker.gameObject.SetActive(false);
                         }
+                        else if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Main && scoreBoardOpen)
+                        {
+                            statTracker.gameObject.SetActive(false);
+                        }
                         else
                         {
                             statTracker.gameObject.SetActive(true);
@@ -1001,10 +1006,6 @@ namespace LookingGlass.StatsDisplay
 
         static string GenerateStatsText()
         {
-            /*if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Tab && !scoreBoardOpen)
-            {
-                return string.Empty;
-            }*/
             Profiler.BeginSample("LookingGlass.StatsDisplay.Regex");
 
             string statsText = statsDisplay.Value >= StatsDisplayEnum.Different_On_Tab && scoreBoardOpen ? secondaryStatsDisplayString.Value : statsDisplayString.Value;
@@ -1045,6 +1046,10 @@ namespace LookingGlass.StatsDisplay
                 }
 
                 if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Tab && !scoreBoardOpen)
+                {
+                    statTracker.gameObject.SetActive(false);
+                }
+                else if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Main && scoreBoardOpen)
                 {
                     statTracker.gameObject.SetActive(false);
                 }

@@ -76,13 +76,17 @@ namespace LookingGlass.ItemCounters
             ReadOnlySpan<SparseIndex> itemIndices = inv.inner.GetNonDefaultIndicesSpan();
             for (int i = 0; i < itemIndices.Length; i++)
             {
-                SparseIndex index = itemIndices[i];
-                int count = inv.inner.GetValueSafe(itemIndices[i]);
-                totalItems += count;
-                int tier = (int)ItemCatalog.GetItemDef((ItemIndex)itemIndices[i]).tier;
-                if (tier < perTier.Length)
+                ItemDef def = ItemCatalog.GetItemDef((ItemIndex)itemIndices[i]);
+                if (!def.hidden)
                 {
-                    perTier[tier] += count;
+                    SparseIndex index = itemIndices[i];
+                    int count = inv.inner.GetValueSafe(itemIndices[i]);
+                    totalItems += count;
+                    int tier = (int)def.tier;
+                    if (tier < perTier.Length)
+                    {
+                        perTier[tier] += count;
+                    }
                 }
             }
             return totalItems;
@@ -111,10 +115,7 @@ namespace LookingGlass.ItemCounters
 
             int totalItems = NewGetTotalItemStacks(ref self.inventory.permanentItemStacks, itemCountsPerm);
             int tempItems = NewGetTotalItemStacks(ref self.inventory.tempItemsStorage.tempItemStacks, cfg_EffectiveCount.Value ? itemCountsPerm : itemCountsTemp);
-
-            totalItems -= itemCountsPerm[5]; //Remove Untiered items;
-            tempItems -= itemCountsTemp[5]; //Easier than needing to filter them out probably
-
+ 
             if (cfg_EffectiveCount.Value)
             {
                 totalItems += tempItems;
