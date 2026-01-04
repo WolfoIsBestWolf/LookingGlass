@@ -132,12 +132,9 @@ namespace LookingGlass.CommandItemCount
             if (self.pickerController)
             {
                 commandSettings = self.pickerController.name.StartsWith("CommandCube");
-                potentialOrFragment = self.pickerController.GetComponent<PickupIndexNetworker>(); //Good enough
-
-                commandSettings = commandSettings || (potentialOrFragment && AutoSortItemsClass.SortPotentials.Value);
-
-                //Both Fragments and Potentials would have a pickup
-                //But also Command so check that seperately
+                //If is a option pickup && not a command pickup
+                potentialOrFragment = !commandSettings && self.pickerController.GetComponent<PickupIndexNetworker>(); 
+ 
                 isMealprep = self.pickerController.GetComponent<CraftingController>();
             }
 
@@ -146,8 +143,10 @@ namespace LookingGlass.CommandItemCount
 
             ReadOnlyCollection<MPButton> elements = self.buttonAllocator.elements;
             Inventory inventory = LocalUserManager.GetFirstLocalUser().cachedMasterController.master.inventory;
-
-            if (commandSettings || !potentialOrFragment || AutoSortItemsClass.SortPotentials.Value)
+ 
+            bool dontSort = potentialOrFragment && !AutoSortItemsClass.SortPotentials.Value;
+            dontSort = dontSort | isMealprep && !AutoSortItemsClass.sortCraftableItems.Value;
+            if (!dontSort)
             {
                 // sort the options and record sorting map. Sorting map is used later to make sure the correct item is scrapped/selected when clicking the corrosponding item button.
                 (options, optionMap) = BasePlugin.instance.autoSortItems.SortPickupPicker(options, commandSettings, isMealprep);

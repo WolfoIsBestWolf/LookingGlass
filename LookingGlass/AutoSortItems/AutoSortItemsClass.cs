@@ -121,7 +121,7 @@ namespace LookingGlass.AutoSortItems
             cfgSortByStackSize.SettingChanged += SettingsChanged;
 
             //
-            SortPotentials = BasePlugin.instance.Config.Bind("Auto Sort Items", "Sort Potentials & Fragments", false, "Sorts Void Potentials & Aurelionite Fragments according to Command rules.");
+            SortPotentials = BasePlugin.instance.Config.Bind("Auto Sort Items", "Sort Potentials & Fragments", false, "Sorts Void Potentials & Aurelionite Fragments according to Scrapper rules.");
             SortDeathScreen = BasePlugin.instance.Config.Bind("Auto Sort Items", "Sort Death Screen Items", false, "Sort items on the game over screen & run reports.");
             sortCraftableItems = BasePlugin.instance.Config.Bind("Auto Sort Items", "Sort Crafting Menu", true, "Sort items in the Wandering Chef or any crafting station\n\nTier sorting if Hud is tier sorted.\n\nAll items that cannot be used in any crafting recipe sorted to the bottom");
 
@@ -307,7 +307,10 @@ namespace LookingGlass.AutoSortItems
                 mapping = Enumerable.ToList(Enumerable.Select(ingredients, (PickupIndex item) => unsorted.IndexOf(item)));
 
             }
-
+            else
+            {
+                return (options, [-1]); // -1 indicates no sorting
+            }
             // apply mapping to options
             PickupPickerController.Option[] sortedOptions = Enumerable.ToArray(Enumerable.Select(mapping, (int index) => options[index]));
             //sortedOptions = sortedOptions.OrderBy(entry => !entry.available).ToArray();
