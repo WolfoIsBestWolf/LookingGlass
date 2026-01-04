@@ -1,6 +1,5 @@
 ﻿using LookingGlass.ItemStatsNameSpace;
 using RoR2;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +11,7 @@ namespace LookingGlass
         {
             if (master)
                 return CalculateChanceWithLuck(baseChance, master.luck);
-            
+
             return baseChance;
         }
 
@@ -38,7 +37,7 @@ namespace LookingGlass
             // Check for modded luck values
             if (cachedUserBody && cachedUserBody.master) return cachedUserBody.master.luck;
             return 0;
- 
+
         }
 
         public static float GetExponentialRechargeTime(float baseCooldown, float extraPercent, int count)

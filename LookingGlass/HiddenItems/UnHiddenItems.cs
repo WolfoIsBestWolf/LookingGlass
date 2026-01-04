@@ -1,15 +1,12 @@
 ﻿using BepInEx.Configuration;
 using LookingGlass.Base;
 using MonoMod.RuntimeDetour;
+using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RiskOfOptions;
-using RoR2.UI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using RoR2;
 using RoR2.ContentManagement;
+using System;
 using System.Reflection;
 
 namespace LookingGlass.HiddenItems

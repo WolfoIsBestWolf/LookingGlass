@@ -1,19 +1,12 @@
 ﻿using BepInEx.Configuration;
+using HG;
 using LookingGlass.Base;
-using LookingGlass.CommandWindowBlur;
-using LeTai.Asset.TranslucentImage;
-using MonoMod.RuntimeDetour;
-using RoR2;
-using RoR2.UI;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using System.Collections;
+using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RiskOfOptions;
-using HG;
+using RoR2;
+using RoR2.UI;
+using UnityEngine;
 
 namespace LookingGlass.EscapeToCloseMenu
 {
@@ -38,7 +31,7 @@ namespace LookingGlass.EscapeToCloseMenu
             {
                 player = networkUIPromptController.currentLocalParticipant.inputPlayer;
             }
-            
+
 
         }
         public void Update()
@@ -46,7 +39,7 @@ namespace LookingGlass.EscapeToCloseMenu
             //If not Mouse1
             //If not Mouse2
             //If not Interact
-            if (closeButton && !Input.GetMouseButtonDown(0) && !Input.GetMouseButtonDown(1) && !player.GetButton(5) && Input.anyKeyDown) 
+            if (closeButton && !Input.GetMouseButtonDown(0) && !Input.GetMouseButtonDown(1) && !player.GetButton(5) && Input.anyKeyDown)
             {
                 CloseMenuAfterFrame();
             }
@@ -88,7 +81,7 @@ namespace LookingGlass.EscapeToCloseMenu
     internal class ButtonsToCloseMenu : BaseThing
     {
         public static ConfigEntry<bool> turnOffCommandMenu;
-         
+
         //internal static List<HGButton> buttonsToClickOnMove = new List<HGButton>();
         //internal static HGButton buttonToClickOnMove = null;
         //internal static bool check = false;
@@ -118,18 +111,18 @@ namespace LookingGlass.EscapeToCloseMenu
             }
         }
 
-       /* IEnumerator AddToArrayAfterFrame(PickupPickerController self)
-        {
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForEndOfFrame();
-            foreach (var item in self.panelInstance.GetComponentsInChildren<HGButton>())
-            {
-                if (item.name.Equals("CancelButton"))
-                {
-                    buttonsToClickOnMove.Add(item);
-                }
-            }
-        }*/
+        /* IEnumerator AddToArrayAfterFrame(PickupPickerController self)
+         {
+             yield return new WaitForEndOfFrame();
+             yield return new WaitForEndOfFrame();
+             foreach (var item in self.panelInstance.GetComponentsInChildren<HGButton>())
+             {
+                 if (item.name.Equals("CancelButton"))
+                 {
+                     buttonsToClickOnMove.Add(item);
+                 }
+             }
+         }*/
 
         //This thing, running literally every frame forever every forever
         //Nah dude dont do that cmon
@@ -175,7 +168,7 @@ namespace LookingGlass.EscapeToCloseMenu
             }
         }
         */
-    
-    
+
+
     }
 }

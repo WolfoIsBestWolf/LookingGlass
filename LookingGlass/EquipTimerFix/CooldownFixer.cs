@@ -1,22 +1,15 @@
 ﻿using BepInEx.Configuration;
 using HarmonyLib;
 using LookingGlass.Base;
-using LookingGlass.ItemStatsNameSpace;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
-using MonoMod.RuntimeDetour.HookGen;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RoR2;
-using RoR2.Projectile;
-using RoR2.Skills;
 using RoR2.UI;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace LookingGlass.EquipTimerFix
@@ -36,7 +29,7 @@ namespace LookingGlass.EquipTimerFix
         {
             permanentEquipCooldownText = BasePlugin.instance.Config.Bind<bool>("Misc", "Permanent Cooldown Indicator For Equip", true, "Makes the cooldown indicator for the equip slot permanent and not just when you have 0 stock.");
             permanentSkillCooldownText = BasePlugin.instance.Config.Bind<bool>("Misc", "Permanent Cooldown Indicator For Skills", true, "Makes the cooldown indicator for skills permanent and not just when you have 0 stock.");
- 
+
             new ILHook(
               typeof(SkillIcon).GetMethod(nameof(SkillIcon.Update), BindingFlags.NonPublic | BindingFlags.Instance),
               Show_Skill_CooldownOverride);
@@ -99,7 +92,7 @@ namespace LookingGlass.EquipTimerFix
             {
                 Debug.LogError("IL FAILED : Show_Skill_CooldownOverride2");
             }
- 
+
             if (c.TryGotoNext(MoveType.After,
                 x => x.MatchLdloc(4)))
             {
@@ -125,8 +118,8 @@ namespace LookingGlass.EquipTimerFix
             ModSettingsManager.AddOption(new CheckBoxOption(permanentEquipCooldownText, new CheckBoxConfig() { restartRequired = false }));
             ModSettingsManager.AddOption(new CheckBoxOption(permanentSkillCooldownText, new CheckBoxConfig() { restartRequired = false }));
         }
-       
- 
+
+
         void Skill_Cooldown(Action<SkillIcon> orig, SkillIcon self)
         {
             orig(self);

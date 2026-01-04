@@ -12,9 +12,7 @@ using RoR2.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -30,7 +28,7 @@ namespace LookingGlass.CommandItemCount
         public static ConfigEntry<bool> hideCountIfZero;
         public static ConfigEntry<bool> commandToolTips;
         public static ConfigEntry<bool> showCorruptedItems;
-       
+
         private List<int> optionMap = [-1];
         private bool isFromOnDisplayBegin = false;
 
@@ -55,31 +53,31 @@ namespace LookingGlass.CommandItemCount
             var destMethod3 = typeof(CommandItemCountClass).GetMethod(nameof(SubmitChoice), BindingFlags.NonPublic | BindingFlags.Instance);
             submitChoiceHook = new Hook(targetMethod3, destMethod3, this);
             //var targetMethod4 = typeof(CraftingController).GetMethod(nameof(CraftingController.FilterAvailableOptions), BindingFlags.NonPublic | BindingFlags.Instance);
-           // var destMethod4 = typeof(CommandItemCountClass).GetMethod(nameof(SortByCraftableItem), BindingFlags.NonPublic | BindingFlags.Instance);
+            // var destMethod4 = typeof(CommandItemCountClass).GetMethod(nameof(SortByCraftableItem), BindingFlags.NonPublic | BindingFlags.Instance);
             //craftingHook = new Hook(targetMethod4, destMethod4, this);
             commandItemCount = BasePlugin.instance.Config.Bind<bool>("Command Settings", "Command Item Count", true, "Shows how many items you have in the command and other pickup menus");
             hideCountIfZero = BasePlugin.instance.Config.Bind<bool>("Command Settings", "Hide Count If Zero", false, "Hides the item count if you have none of an item");
             commandToolTips = BasePlugin.instance.Config.Bind<bool>("Command Settings", "Command Tooltips", true, "Shows tooltips in the command and other pickup menus");
             showCorruptedItems = BasePlugin.instance.Config.Bind<bool>("Command Settings", "Show Corrupted Items", true, "Shows when items have been corrupted");
-           
+
             SetupRiskOfOptions();
         }
 
 
 
-       /* void SortByCraftableItem(Action<CraftingController> orig, CraftingController self)
-        {
-            orig(self);
-            if (!sortCraftableItems.Value) return; // only sort if the option is enabled
+        /* void SortByCraftableItem(Action<CraftingController> orig, CraftingController self)
+         {
+             orig(self);
+             if (!sortCraftableItems.Value) return; // only sort if the option is enabled
 
-            //Sort items that cannot be used in *any* crafting recipe to the bottom
-            //The slots empty check to prevent re-sorting when putting in the first ingredient
-            //Maybe still better to sort every time? un sure.
-            if (self.AllSlotsEmpty())
-            {
-                self.options = self.options.OrderBy(entry => !entry.available).ToArray();
-            }
-        }*/
+             //Sort items that cannot be used in *any* crafting recipe to the bottom
+             //The slots empty check to prevent re-sorting when putting in the first ingredient
+             //Maybe still better to sort every time? un sure.
+             if (self.AllSlotsEmpty())
+             {
+                 self.options = self.options.OrderBy(entry => !entry.available).ToArray();
+             }
+         }*/
 
         public void SetupRiskOfOptions()
         {
@@ -87,7 +85,7 @@ namespace LookingGlass.CommandItemCount
             ModSettingsManager.AddOption(new CheckBoxOption(hideCountIfZero, new CheckBoxConfig() { restartRequired = false, checkIfDisabled = CheckHideCountIfZero }));
             ModSettingsManager.AddOption(new CheckBoxOption(commandToolTips, new CheckBoxConfig() { name = "Pickup Menu Tooltips", restartRequired = false }));
             ModSettingsManager.AddOption(new CheckBoxOption(showCorruptedItems, new CheckBoxConfig() { restartRequired = false, checkIfDisabled = CheckShowCorruptedItems }));
-         
+
         }
         private static bool CheckHideCountIfZero()
         {
@@ -145,7 +143,7 @@ namespace LookingGlass.CommandItemCount
 
             string parentName = self.gameObject.name;
             bool withOneMore = parentName.StartsWith("OptionPickerPanel") || parentName.StartsWith("CommandPickerPanel");
-        
+
             ReadOnlyCollection<MPButton> elements = self.buttonAllocator.elements;
             Inventory inventory = LocalUserManager.GetFirstLocalUser().cachedMasterController.master.inventory;
 
@@ -331,7 +329,7 @@ namespace LookingGlass.CommandItemCount
             {
                 content.bodyToken = itemDef.descriptionToken;
             }
-            else if(equipmentDef)
+            else if (equipmentDef)
             {
                 content.bodyToken = equipmentDef.descriptionToken;
             }
@@ -339,7 +337,7 @@ namespace LookingGlass.CommandItemCount
             {
                 content.bodyToken = droneDef.descriptionToken;
             }
-             
+
             if (isItem && ItemStats.fullDescInHud.Value)
             {
                 string stats;

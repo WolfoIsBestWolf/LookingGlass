@@ -1,25 +1,20 @@
 ﻿using BepInEx.Configuration;
 using LookingGlass.Base;
 using MonoMod.RuntimeDetour;
+using RiskOfOptions;
 using RiskOfOptions.Components.Options;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RiskOfOptions;
 using RoR2;
+using RoR2.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using RoR2.UI;
-using System.Collections.ObjectModel;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using LookingGlass.ResizeCommandWindow;
-using System.Collections;
-using UnityEngine.EventSystems;
 using System.Reflection;
-using RoR2.DirectionalSearch;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace LookingGlass.AutoSortItems
 {
@@ -50,13 +45,13 @@ namespace LookingGlass.AutoSortItems
         public static ConfigEntry<string> TierOrder;
         public static ConfigEntry<bool> CombineVoidTiers;
         public static ConfigEntry<StackSortType> cfgSortByStackSize;
- 
+
         public static ConfigEntry<CommandSortType> SortCommand;
         public static ConfigEntry<ScrapperSortType> SortScrapper;
- 
-       
+
+
         public static ConfigEntry<bool> SortScrapperTier;
-  
+
         public static ConfigEntry<bool> SortPotentials;
         public static ConfigEntry<bool> SortDeathScreen;
         public static ConfigEntry<bool> sortCraftableItems;
@@ -83,11 +78,11 @@ namespace LookingGlass.AutoSortItems
             Off,
             MatchHud,
             Largest_Smallest,
-            Smallest_Largest, 
+            Smallest_Largest,
             A_Z,
             Z_A,
         }
-  
+
         public enum TierSortPreset
         {
             Set,
@@ -107,24 +102,24 @@ namespace LookingGlass.AutoSortItems
             cfgSortByTier = BasePlugin.instance.Config.Bind("Auto Sort Items", "Tier Sort", TierSortMode.Tier, "Sorts by Tier");
             TierOrder = BasePlugin.instance.Config.Bind<string>("Auto Sort Items", "Tier Order", "Lunar FoodTier VoidBoss Boss VoidTier3 Tier3 VoidTier2 Tier2 VoidTier1 Tier1 NoTier", "How the tiers should be ordered");
             CombineVoidTiers = BasePlugin.instance.Config.Bind("Auto Sort Items", "Combine Normal And Void Tiers", false, "Considers void tiers to be the same as their normal counterparts");
-            
+
             cfgSortByStackSize = BasePlugin.instance.Config.Bind("Auto Sort Items", "Stack Size Sort", StackSortType.Largest_Smallest, "Sorts by Stack Size");
-     
-            SortCommand = BasePlugin.instance.Config.Bind("Auto Sort Items", "Command Sorting", CommandSortType.Off, "Sorts Command menus by stack count or alphabetically.\n\n"); 
+
+            SortCommand = BasePlugin.instance.Config.Bind("Auto Sort Items", "Command Sorting", CommandSortType.Off, "Sorts Command menus by stack count or alphabetically.\n\n");
             //Most people would be accustomed to the vanilla sort order, so shouldn't mess with that.
             //Additionally sorting Void Potentials is just kind of, who cares.
-            
-            
+
+
             SortScrapper = BasePlugin.instance.Config.Bind("Auto Sort Items", "Scrapper Sorting", ScrapperSortType.MatchHud, "Sorts Scrapper by stack count or alphetically.\n\nMatchHud will automatically use tier sorting and stacking sorting of the regular hud.");
             SortScrapperTier = BasePlugin.instance.Config.Bind("Auto Sort Items", "Sort Scrapper by Tier", true, "Sorts Scrapper by tier"); //While this should be on by default, because your hud is sorted by tier and you'd expect those two to correlate
-            //The scrapper sorting should match, whatever is shown in the Hud, so they can see like ah yeah X item is between YZ and it's the same in the scrapper.
-            
+                                                                                                                                            //The scrapper sorting should match, whatever is shown in the Hud, so they can see like ah yeah X item is between YZ and it's the same in the scrapper.
+
             ScrapSorting.SettingChanged += SettingsChanged;
             cfgSortByTier.SettingChanged += SettingsChanged;
             TierOrder.SettingChanged += SettingsChanged;
             CombineVoidTiers.SettingChanged += SettingsChanged;
             cfgSortByStackSize.SettingChanged += SettingsChanged;
-           
+
             //
             SortPotentials = BasePlugin.instance.Config.Bind("Auto Sort Items", "Sort Potentials & Fragments", false, "Sorts Void Potentials & Aurelionite Fragments according to Command rules.");
             SortDeathScreen = BasePlugin.instance.Config.Bind("Auto Sort Items", "Sort Death Screen Items", false, "Sort items on the game over screen & run reports.");
@@ -139,9 +134,9 @@ namespace LookingGlass.AutoSortItems
         {
             ModSettingsManager.AddOption(new ChoiceOption(ScrapSorting, new ChoiceConfig() { restartRequired = false }));
             ModSettingsManager.AddOption(new ChoiceOption(cfgSortByTier, new ChoiceConfig() { restartRequired = false }));
-          
+
             ModSettingsManager.AddOption(new ChoiceOption(cfgSortByStackSize, new ChoiceConfig() { restartRequired = false }));
-  
+
             ModSettingsManager.AddOption(new ChoiceOption(SortCommand, new ChoiceConfig() { restartRequired = false, /*checkIfDisabled = CheckNotCommandSortAlphabetical*/ }));
             ModSettingsManager.AddOption(new ChoiceOption(SortScrapper, new ChoiceConfig() { restartRequired = false, /*checkIfDisabled = CheckNotScrapperSortTierAlphabetical*/ }));
             ModSettingsManager.AddOption(new CheckBoxOption(SortScrapperTier, new CheckBoxConfig() { restartRequired = false, checkIfDisabled = CheckNotScrapperSortTierAlphabetical }));
@@ -152,8 +147,8 @@ namespace LookingGlass.AutoSortItems
             ModSettingsManager.AddOption(new GenericButtonOption("Use Descending Tiers Preset", "Auto Sort Items", "Sets the Tier Order option to use descending tiers", "Set", SetDescendingTiers));
             ModSettingsManager.AddOption(new CheckBoxOption(CombineVoidTiers, new CheckBoxConfig() { restartRequired = false, checkIfDisabled = CheckTierSort }));
 
- 
-            ModSettingsManager.AddOption(new CheckBoxOption(SortPotentials, new CheckBoxConfig() { restartRequired = false}));
+
+            ModSettingsManager.AddOption(new CheckBoxOption(SortPotentials, new CheckBoxConfig() { restartRequired = false }));
             ModSettingsManager.AddOption(new CheckBoxOption(SortDeathScreen, new CheckBoxConfig() { restartRequired = false }));
             ModSettingsManager.AddOption(new CheckBoxOption(sortCraftableItems, new CheckBoxConfig() { restartRequired = false }));
 
@@ -163,7 +158,7 @@ namespace LookingGlass.AutoSortItems
         {
             return cfgSortByTier.Value == TierSortMode.Off;
         }
- 
+
         private static bool CheckNotScrapperSortTierAlphabetical()
         {
             return SortScrapper.Value == ScrapperSortType.A_Z || SortScrapper.Value == ScrapperSortType.Z_A || SortScrapper.Value == ScrapperSortType.MatchHud;
@@ -186,7 +181,7 @@ namespace LookingGlass.AutoSortItems
             {
                 if (controller.name.Contains("Tier Order"))
                 {
-               
+
                     controller.SubmitValue("Tier1 VoidTier1 Tier2 VoidTier2 Tier3 VoidTier3 Boss VoidBoss FoodTier Lunar NoTier");
                 }
             }
@@ -200,7 +195,7 @@ namespace LookingGlass.AutoSortItems
             {
                 List<ItemIndex> items = new List<ItemIndex>();
                 List<ItemIndex> unSortedItems = new List<ItemIndex>(); //used to make mapping of what changed when sorting
-         
+
                 //bool meal2 = isMealprep && sortCraftableItems.Value;
                 for (int i = 0; i < options.Length; i++)
                 {
@@ -260,7 +255,7 @@ namespace LookingGlass.AutoSortItems
                     {
                         items = new List<ItemIndex>(SortItems(items.ToArray(), items.Count, display, false, SortScrapperTier.Value, SortScrapper.Value >= ScrapperSortType.Largest_Smallest, SortScrapper.Value == ScrapperSortType.Largest_Smallest));
                     }
-                      
+
                 }
                 //items = new List<ItemIndex>(SortItems(items.ToArray(), items.Count, display, false, isCommand ? false : SortScrapperTier.Value, isCommand ? SortCommand.Value == MenuSortType.Largest_Smallest: SortScrapper.Value, isCommand ? SortCommandDescending.Value : SortScrapperDescending.Value));
 
@@ -316,9 +311,9 @@ namespace LookingGlass.AutoSortItems
             // apply mapping to options
             PickupPickerController.Option[] sortedOptions = Enumerable.ToArray(Enumerable.Select(mapping, (int index) => options[index]));
             //sortedOptions = sortedOptions.OrderBy(entry => !entry.available).ToArray();
- 
-            return (sortedOptions,mapping);
-            
+
+            return (sortedOptions, mapping);
+
 
         }
         IEnumerator ReOrganizeItems(PickupPickerController.Option[] options, PickupPickerPanel self)
@@ -383,16 +378,16 @@ namespace LookingGlass.AutoSortItems
             var targetMethod = typeof(RoR2.UI.ItemInventoryDisplay).GetMethod(nameof(RoR2.UI.ItemInventoryDisplay.UpdateDisplay), BindingFlags.Public | BindingFlags.Instance);
             var destMethod = typeof(AutoSortItemsClass).GetMethod(nameof(UpdateDisplayOverride), BindingFlags.NonPublic | BindingFlags.Instance);
             overrideHook = new Hook(targetMethod, destMethod, this);
-  
+
         }
-  
+
         private void UpdateDisplayOverride(Action<RoR2.UI.ItemInventoryDisplay> orig, RoR2.UI.ItemInventoryDisplay self)
         {
             //If inventory is null is a good check to see if it's a GameOver or RunReport Inventory.
             //Because there the items are added manually
             //However would also prevent sorting of enemy items. (Vields, Evo)
             //I am unaware of a better check atm
-           // if (self != null && (self.inventory != null || SortDeathScreen.Value))
+            // if (self != null && (self.inventory != null || SortDeathScreen.Value))
             if (self != null && (Run.instance && Run.instance.isRunning || SortDeathScreen.Value))
             {
                 display = self;
@@ -469,7 +464,7 @@ namespace LookingGlass.AutoSortItems
             List<ItemIndex> allItems = new List<ItemIndex>();
             for (int i = 0; i < count; i++)
             {
-                if (seperateScrap && (ItemCatalog.GetItemDef(items[i]).ContainsTag(ItemTag.Scrap) || ItemCatalog.GetItemDef(items[i]).ContainsTag(ItemTag.PriorityScrap) ||  items[i] == DLC1Content.Items.RegeneratingScrapConsumed.itemIndex))
+                if (seperateScrap && (ItemCatalog.GetItemDef(items[i]).ContainsTag(ItemTag.Scrap) || ItemCatalog.GetItemDef(items[i]).ContainsTag(ItemTag.PriorityScrap) || items[i] == DLC1Content.Items.RegeneratingScrapConsumed.itemIndex))
                 {
                     scrapList.Add(items[i]);
                 }
@@ -505,9 +500,9 @@ namespace LookingGlass.AutoSortItems
                 {
                     itemTierLists[i] = new List<ItemIndex>(itemTierLists[i].OrderBy((itemIndex) =>
                         // if sort by acquired enabled, will ignore itemIndex
-                        (sortByAcquired ? 0 : (int) itemIndex)
+                        (sortByAcquired ? 0 : (int)itemIndex)
                         // if sort by stack size disabled, will ignore stacks
-                        + (!sortByStackSize ? 0 : (descendingStackSize ? -1 : 1) * display.itemStacks[(int) itemIndex] * 20000)).ToArray());
+                        + (!sortByStackSize ? 0 : (descendingStackSize ? -1 : 1) * display.itemStacks[(int)itemIndex] * 20000)).ToArray());
                 }
 
                 if (scrapList.Count >= 0)
@@ -603,7 +598,7 @@ namespace LookingGlass.AutoSortItems
                 else if (def.equipmentIndex != EquipmentIndex.None)
                 {
                     equipment.Add(def.pickupIndex);
-                }    
+                }
             }
 
             if (sortByTier)
@@ -629,9 +624,9 @@ namespace LookingGlass.AutoSortItems
                         ITEMS.Add(PickupCatalog.FindPickupIndex(itemTierLists[i][x]));
                     }
                 }
-            
+
             }
-          
+
             newArray.AddRange(ITEMS);
             newArray.AddRange(equipment);
             return newArray.ToArray();

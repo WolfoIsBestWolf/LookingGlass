@@ -9,7 +9,6 @@ using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
 using RoR2;
 using RoR2.Skills;
-using RoR2.Stats;
 using RoR2.UI;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace LookingGlass.ItemStatsNameSpace
 {
@@ -58,7 +56,7 @@ namespace LookingGlass.ItemStatsNameSpace
             StatsOnPingByOtherPlayer = BasePlugin.instance.Config.Bind<bool>("Misc", "Stats On Ping By Other Player", false, "Shows item and drone descriptions when another player pings an item/drone in the world");
             itemStatsShowHidden = BasePlugin.instance.Config.Bind<bool>("Misc", "Show Hidden Items", false, "Shows item descriptions for hidden items in Multishops.\n\nThis is cheating.");
             //Why is there just a random cheating config in this mod lol.
-            
+
             itemStatsFontSize = BasePlugin.instance.Config.Bind<float>("Misc", "Item Stats Font Size", 100f, "Changes the font size of item stats");
             capChancePercentage = BasePlugin.instance.Config.Bind<bool>("Misc", "Cap Chance Percentage", true, "Caps displayed chances at 100%. May interact weirdly with luck if turned off");
             abilityProcCoefficients = BasePlugin.instance.Config.Bind<bool>("Misc", "Ability Proc Coefficients", true, "Shows ability cooldowns.\nShow ability proc coefficients on supported survivors");
@@ -68,12 +66,12 @@ namespace LookingGlass.ItemStatsNameSpace
         public void SetupRiskOfOptions()
         {
             //Config that people are likelier to turn off should be higher up in Risk Menu
-            ModSettingsManager.AddOption(new CheckBoxOption(fullDescInHud, new CheckBoxConfig() {category = "Item Info", restartRequired = false }));
+            ModSettingsManager.AddOption(new CheckBoxOption(fullDescInHud, new CheckBoxConfig() { category = "Item Info", restartRequired = false }));
             ModSettingsManager.AddOption(new CheckBoxOption(fullDescOnPickup, new CheckBoxConfig() { category = "Item Info", restartRequired = false }));
             ModSettingsManager.AddOption(new CheckBoxOption(itemStatsOnPing, new CheckBoxConfig() { category = "Item Info", restartRequired = false }));
             ModSettingsManager.AddOption(new CheckBoxOption(droneStatsOnPing, new CheckBoxConfig() { category = "Item Info", restartRequired = false }));
             ModSettingsManager.AddOption(new CheckBoxOption(StatsOnPingByOtherPlayer, new CheckBoxConfig() { category = "Item Info", restartRequired = false }));
-            
+
             ModSettingsManager.AddOption(new CheckBoxOption(itemStatsCalculations, new CheckBoxConfig() { category = "Item Info", restartRequired = false, checkIfDisabled = ItemStatsDisabled }));
             ModSettingsManager.AddOption(new SliderOption(itemStatsFontSize, new SliderConfig() { category = "Item Info", restartRequired = false, min = 1, max = 300 }));
             ModSettingsManager.AddOption(new CheckBoxOption(capChancePercentage, new CheckBoxConfig() { category = "Item Info", restartRequired = false }));
@@ -88,7 +86,7 @@ namespace LookingGlass.ItemStatsNameSpace
         {
             return !fullDescInHud.Value;
         }
-         private static bool AbilityProcsEnabled()
+        private static bool AbilityProcsEnabled()
         {
             return !abilityProcCoefficients.Value;
         }
@@ -98,7 +96,7 @@ namespace LookingGlass.ItemStatsNameSpace
             new Hook(typeof(GenericNotification).GetMethod(nameof(GenericNotification.SetItem), BindingFlags.Public | BindingFlags.Instance),
                     typeof(ItemStats).GetMethod(nameof(Item_PickupText), BindingFlags.NonPublic | BindingFlags.Instance),
                     this);
- 
+
             new Hook(typeof(GenericNotification).GetMethod(nameof(GenericNotification.SetEquipment), BindingFlags.Public | BindingFlags.Instance),
                      typeof(ItemStats).GetMethod(nameof(Equipment_PickupText), BindingFlags.NonPublic | BindingFlags.Instance),
                      this);
@@ -106,10 +104,10 @@ namespace LookingGlass.ItemStatsNameSpace
             new Hook(typeof(GenericNotification).GetMethod(nameof(GenericNotification.SetDrone), BindingFlags.Public | BindingFlags.Instance),
                                 typeof(ItemStats).GetMethod(nameof(Drone_PickupText), BindingFlags.NonPublic | BindingFlags.Instance),
                                 this);
-  
-      
+
+
             //Actual things
-            var targetMethod = typeof(ItemIcon).GetMethod(nameof(ItemIcon.SetItemIndex), new[] {typeof(ItemIndex), typeof(int), typeof(float) });
+            var targetMethod = typeof(ItemIcon).GetMethod(nameof(ItemIcon.SetItemIndex), new[] { typeof(ItemIndex), typeof(int), typeof(float) });
             var destMethod = typeof(ItemStats).GetMethod(nameof(ItemIcon_FullDescriptionAndStats), BindingFlags.NonPublic | BindingFlags.Instance);
             new Hook(targetMethod, destMethod, this);
 
@@ -120,14 +118,14 @@ namespace LookingGlass.ItemStatsNameSpace
 
 
 
-   
+
 
             new ILHook(
-                 typeof(LoadoutPanelController.Row).GetMethod(nameof(LoadoutPanelController.Row.FromSkillSlot), BindingFlags.Public | BindingFlags.Static), 
+                 typeof(LoadoutPanelController.Row).GetMethod(nameof(LoadoutPanelController.Row.FromSkillSlot), BindingFlags.Public | BindingFlags.Static),
                  AddProcCDToLoadoutPanel);
 
             new Hook(typeof(HUD).GetMethod(nameof(HUD.ActivateScoreboard), BindingFlags.Public | BindingFlags.Instance),
-                  UpdateAllHUDIconsWhenScoreboard); 
+                  UpdateAllHUDIconsWhenScoreboard);
 
             new Hook(typeof(ScoreboardStrip).GetMethod(nameof(ScoreboardStrip.SetMaster), BindingFlags.Public | BindingFlags.Instance),
                  UpdateScoreboardEquipIcon);
@@ -145,7 +143,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 {
                     SetItemDescription(self.itemInventoryDisplay.itemIcons[i]);
                 }
-            }         
+            }
         }
 
 
@@ -157,7 +155,7 @@ namespace LookingGlass.ItemStatsNameSpace
         {
             orig(self);
             //Debug.Log("SCOREBOARD");
-     
+
             if (fullDescInHud.Value)
             {
                 for (int i = 0; i < self.itemInventoryDisplay.itemIcons.Count; i++)
@@ -177,8 +175,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 }
             }
         }
-        
-        void UpdateScoreboardEquipIcon(Action<ScoreboardStrip,CharacterMaster> orig, ScoreboardStrip self, CharacterMaster master)
+
+        void UpdateScoreboardEquipIcon(Action<ScoreboardStrip, CharacterMaster> orig, ScoreboardStrip self, CharacterMaster master)
         {
             orig(self, master);
             if (fullDescInHud.Value)
@@ -207,7 +205,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 //Why was there a "In Proc Dict" check for this?
                 //Maybe could do if cooldown == 0 then dont show but it's fine
                 var cooldown = CalculateSkillCooldown(targetSkill);
-                desc.Append("\n\nSkill Cooldown: <style=\"cIsUtility\">" +cooldown.ToString("0.00") + "s</style>");
+                desc.Append("\n\nSkill Cooldown: <style=\"cIsUtility\">" + cooldown.ToString("0.00") + "s</style>");
 
                 if (cooldown != targetSkill.skillDef.baseRechargeInterval)
                 {
@@ -218,7 +216,7 @@ namespace LookingGlass.ItemStatsNameSpace
                     desc.Append(" <style=\"cStack\">(Base: " + self.targetSkill.skillDef.baseRechargeInterval + ")</style>");
                     desc.Append($"\nCooldown Reduction: <style=\"cIsUtility>{cooldownReductionFormatted}%</style>");
                 }
-     
+
                 bool blacklistedSkill = false;
                 if (ProcCoefficientData.hasProcCoefficient(targetSkill.skillNameToken))
                 {
@@ -291,7 +289,7 @@ namespace LookingGlass.ItemStatsNameSpace
                                         desc.Append(Mathf.CeilToInt(0.75f / itemStats.calculateValuesNew(0f, 1, ProcCoefficientData.GetProcCoefficient(self.targetSkill.skillNameToken))[0]));
                                         desc.Append(" to cap)</style>");
                                     }
- 
+
                                 }
                             }
 
@@ -301,7 +299,7 @@ namespace LookingGlass.ItemStatsNameSpace
             }
             self.tooltipProvider.overrideBodyText = desc.ToString();
         }
- 
+
         public void AddProcCDToLoadoutPanel(ILContext il)
         {
             ILCursor c = new(il);
@@ -326,7 +324,7 @@ namespace LookingGlass.ItemStatsNameSpace
                             if (ProcCoefficientData.hasProcCoefficient(skill.skillNameToken))
                             {
                                 float proc = ProcCoefficientData.GetProcCoefficient(skill.skillNameToken);
-                                if (proc!= -1)
+                                if (proc != -1)
                                 {
                                     newDesc.Append("\nProc Coefficient: <style=cIsDamage>" + proc.ToString("0.0##") + "</color>");
                                 }
@@ -336,7 +334,7 @@ namespace LookingGlass.ItemStatsNameSpace
                                 //Extra info like Corrupted/Boosted proc and Ticks
                                 newDesc.Append(ProcCoefficientData.GetExtraInfo(skill.skillNameToken));
                             }
-               
+
                             return newDesc.ToString();
                         }
                     }
@@ -362,7 +360,7 @@ namespace LookingGlass.ItemStatsNameSpace
         internal void EquipmentIcon_AddCDProcInfo(EquipmentIcon self)
         {
             // Multiplayer compatibility
-           
+
             if (self.targetInventory && self.tooltipProvider && self.currentDisplayData.equipmentDef)
             {
                 if (self.currentDisplayData.equipmentDisabled)
@@ -396,7 +394,7 @@ namespace LookingGlass.ItemStatsNameSpace
             }
 
         }
-    
+
         float CalculateSkillCooldown(GenericSkill self)
         {
             if (self.skillDef.baseRechargeInterval < 0.5f)
@@ -414,13 +412,13 @@ namespace LookingGlass.ItemStatsNameSpace
 
             return calculated_skill_cooldown;
         }
- 
+
         internal static void SetItemDescription(ItemIcon self)
         {
- 
+
             var itemDef = ItemCatalog.GetItemDef(self.itemIndex);
-           /* if (itemDef.nameToken == "ITEM_MYSTICSITEMS_MANUSCRIPT_NAME")
-                return;*/ //I dont think this is needed anymore...
+            /* if (itemDef.nameToken == "ITEM_MYSTICSITEMS_MANUSCRIPT_NAME")
+                 return;*/ //I dont think this is needed anymore...
             if (self.tooltipProvider != null && itemDef != null)
             {
                 var strip = self.GetComponentInParent<ScoreboardStrip>();
@@ -448,7 +446,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 {
                     ItemStatsDef statsDef = ItemDefinitions.allItemDefinitions[(int)itemDef.itemIndex];
 
-                    
+
                     if (withOneMore && statsDef.descriptions.Count != 0)
                     {
                         if (newItemCount == 0 || forceNew)
@@ -484,7 +482,7 @@ namespace LookingGlass.ItemStatsNameSpace
                                 values = statsDef.calculateValuesBody(master ? master.GetBody() : LocalUserManager.GetFirstLocalUser().cachedBody, newItemCount);
                             }
                         }
-              
+
                         if (values != null)
                         {
                             GetItemStatsFormatted(ref statsDef, ref values, ref itemDescription, true);
@@ -508,38 +506,38 @@ namespace LookingGlass.ItemStatsNameSpace
                 case ItemStatsDef.ValueType.Armor:
                     return "<style=cIsHealing";
                 case ItemStatsDef.ValueType.Damage:
-                    return "<style=cIsDamage";               
+                    return "<style=cIsDamage";
                 case ItemStatsDef.ValueType.Utility:
                     return "<style=cIsUtility";
                 case ItemStatsDef.ValueType.Health:
-                   return"<style=cIsHealth";
+                    return "<style=cIsHealth";
                 case ItemStatsDef.ValueType.Void:
-                   return"<style=cIsVoid";
+                    return "<style=cIsVoid";
                 case ItemStatsDef.ValueType.Gold:
                 case ItemStatsDef.ValueType.HumanObjective:
-                    return"<style=cHumanObjective";
+                    return "<style=cHumanObjective";
                 case ItemStatsDef.ValueType.LunarObjective:
-                    return"<style=cLunarObjective";
+                    return "<style=cLunarObjective";
                 case ItemStatsDef.ValueType.Stack:
-                    return"<style=cStack";
+                    return "<style=cStack";
                 case ItemStatsDef.ValueType.WorldEvent:
-                    return"<style=cWorldEvent";
+                    return "<style=cWorldEvent";
                 case ItemStatsDef.ValueType.Artifact:
-                    return"<style=cArtifact";
+                    return "<style=cArtifact";
                 case ItemStatsDef.ValueType.UserSetting:
-                    return"<style=cUserSetting";
+                    return "<style=cUserSetting";
                 case ItemStatsDef.ValueType.Death:
-                    return"<style=cDeath";
+                    return "<style=cDeath";
                 case ItemStatsDef.ValueType.Sub:
-                    return"<style=cSub";
+                    return "<style=cSub";
                 case ItemStatsDef.ValueType.Mono:
-                    return"<style=cMono";
+                    return "<style=cMono";
                 case ItemStatsDef.ValueType.Shrine:
-                    return"<style=cShrine";
+                    return "<style=cShrine";
                 case ItemStatsDef.ValueType.Event:
                     return "<style=cEvent";
             }
-            return "</style>"; 
+            return "</style>";
         }
 
         //What does ref do pls help
@@ -748,7 +746,7 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 return;
             }
-              
+
 
             //Item
             //Drone
@@ -801,7 +799,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 if (!DroneShop.hidden)
                 {
                     pickupIndex = DroneShop.CurrentPickupIndex;
-                } 
+                }
             }
             else if (newPingInfo.targetGameObject.TryGetComponent<PickupDistributorBehavior>(out var TempShop))
             {
@@ -813,7 +811,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 {
                     pickupIndex = TempShop.pickup.pickupIndex;
                     isTemp = TempShop.tempPickups;
-                } 
+                }
             }
             if (pickupIndex != PickupIndex.none)
             {
@@ -824,8 +822,8 @@ namespace LookingGlass.ItemStatsNameSpace
 
         internal void PutLastNotificationFirst(CharacterMaster characterMaster, float durationOverride = 5f)
         {
- 
- 
+
+
             //If duration needs to be modified, do here
             CharacterMasterNotificationQueue notificationQueueForMaster = CharacterMasterNotificationQueue.GetNotificationQueueForMaster(characterMaster);
             var newNotification = notificationQueueForMaster.notifications.Last();

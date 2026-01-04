@@ -1,10 +1,7 @@
-﻿using LookingGlass.ItemCounters;
-using RoR2;
+﻿using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using static RoR2.HealthComponent;
 
 namespace LookingGlass.ItemStatsNameSpace
 {
@@ -12,7 +9,7 @@ namespace LookingGlass.ItemStatsNameSpace
     {
         public static Dictionary<int, ItemStatsDef> allItemDefinitions = new Dictionary<int, ItemStatsDef>();
         public static Dictionary<int, ItemStatsDef> allEquipmentDefinitions = new Dictionary<int, ItemStatsDef>();
-        
+
         public static float GetRegenMult(Inventory inv)
         {
             //(0.8f + level * 0.2f)
@@ -69,7 +66,7 @@ namespace LookingGlass.ItemStatsNameSpace
             };
             allItemDefinitions.Add((int)RoR2Content.Items.Bear.itemIndex, itemStat);
 
-            
+
             //Elusive Antlers (Previously Antler Shield)
             //Changed to 3 per stack from 3 + 1
             itemStat = new ItemStatsDef();
@@ -92,7 +89,7 @@ namespace LookingGlass.ItemStatsNameSpace
             };
             allItemDefinitions.Add((int)DLC2Content.Items.SpeedBoostPickup.itemIndex, itemStat);
 
-            
+
             //Armor-Piercing Rounds
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Bonus Damage: ");
@@ -133,12 +130,12 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 List<float> values = new();
                 values.Add(25 * stackCount);
-                values.Add((25 * stackCount)/(body.baseMaxHealth*(0.7f + body.level * 0.3f)));
+                values.Add((25 * stackCount) / (body.baseMaxHealth * (0.7f + body.level * 0.3f)));
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.FlatHealth.itemIndex, itemStat);
 
-            
+
             //Bolstering Lantern
             //Changed to no longer increase Radius
             itemStat = new ItemStatsDef();
@@ -155,13 +152,13 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 List<float> values = new();
                 values.Add(.065f + .035f * stackCount);
-                values.Add((.065f + .035f * stackCount)*(2+ stackCount));
-                values.Add(2 +stackCount);
+                values.Add((.065f + .035f * stackCount) * (2 + stackCount));
+                values.Add(2 + stackCount);
                 return values;
             };
             allItemDefinitions.Add((int)DLC2Content.Items.AttackSpeedPerNearbyAllyOrEnemy.itemIndex, itemStat);
-            
-            
+
+
             //Bundle of Fireworks
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Fireworks: ");
@@ -211,8 +208,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.HealWhileSafe.itemIndex, itemStat);
-            
-            
+
+
             //Chronic Expansion
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Damage Per Kill: ");
@@ -228,7 +225,7 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 List<float> values = new();
                 values.Add(.025f + (.01f * stackCount));
-                values.Add((.025f + (.01f * stackCount))*(5 + (5 * stackCount)));
+                values.Add((.025f + (.01f * stackCount)) * (5 + (5 * stackCount)));
                 values.Add(5 + (5 * stackCount));
                 return values;
             };
@@ -261,7 +258,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)DLC1Content.Items.FragileDamageBonus.itemIndex, itemStat);
- 
+
 
             //Energy Drink
             itemStat = new ItemStatsDef();
@@ -439,7 +436,7 @@ namespace LookingGlass.ItemStatsNameSpace
             };
             allItemDefinitions.Add((int)DLC1Content.Items.HealingPotion.itemIndex, itemStat);
 
-           
+
 
             //Repulsion Armor Plate
             itemStat = new ItemStatsDef();
@@ -577,8 +574,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.WardOnLevel.itemIndex, itemStat);
-            
-            
+
+
             //Warped echo
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Damage Instances: ");
@@ -610,7 +607,7 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.calculateValuesFlat = (stackCount) =>
             {
                 List<float> values = new();
-                values.Add(0.0075f + stackCount*0.0025f);
+                values.Add(0.0075f + stackCount * 0.0025f);
                 return values;
             };
             allItemDefinitions.Add((int)DLC3Content.Items.BarrierOnCooldown.itemIndex, itemStat);
@@ -684,8 +681,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.WarCryOnMultiKill.itemIndex, itemStat);
-            
-            
+
+
             //Chance doll
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Upgrade Chance: ");
@@ -723,7 +720,7 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 List<float> values = new();
                 values.Add(7 * stackCount);
-                return values; 
+                return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.DeathMark.itemIndex, itemStat);
 
@@ -854,7 +851,7 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.descriptions.Add("Current Increase ");
             itemStat.valueTypes.Add(ItemStatsDef.ValueType.Healing);
             itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.FlatHealth);
-            itemStat.descriptions.Add("Health Increase as %: "); 
+            itemStat.descriptions.Add("Health Increase as %: ");
             itemStat.valueTypes.Add(ItemStatsDef.ValueType.Healing);
             itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Percentage);
             itemStat.calculateValuesBody = (body, stackCount) =>
@@ -900,8 +897,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.TPHealingNova.itemIndex, itemStat);
-            
-            
+
+
             //Luminous Shot
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Max Charges: ");
@@ -926,8 +923,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)DLC2Content.Items.IncreasePrimaryDamage.itemIndex, itemStat);
-            
-            
+
+
             // Noxious Thorn
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Transfer Count: ");
@@ -995,8 +992,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)DLC2Content.Items.ExtraStatsOnLevelUp.itemIndex, itemStat);
-            
-            
+
+
             //Predatory Instincts
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Max Attack Speed: ");
@@ -1102,8 +1099,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.IceRing.itemIndex, itemStat);
-            
-            
+
+
             //Sale star
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("2 Items Chance: ");
@@ -1200,7 +1197,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 List<float> values = new();
                 values.Add(3 + stackCount);
                 values.Add(2 + stackCount);
-                values.Add(10f/(2f + stackCount));
+                values.Add(10f / (2f + stackCount));
                 values.Add(1);
                 return values;
             };
@@ -1281,10 +1278,10 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.ProcCoeff);
             itemStat.calculateValuesFlat = (stackCount) =>
             {
-                 List<float> values = new();
-                 values.Add(stackCount);
-                 values.Add(0.6f);
-                 values.Add(0f);
+                List<float> values = new();
+                values.Add(stackCount);
+                values.Add(0.6f);
+                values.Add(0f);
                 return values;
             };
             allItemDefinitions.Add((int)DLC2Content.Items.TeleportOnLowHealth.itemIndex, itemStat);
@@ -1378,7 +1375,7 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 List<float> values = new();
                 values.Add(30 * stackCount);
-                values.Add((float)((body.maxShield * (0.9f+0.1* stackCount) / body.damage)+1));
+                values.Add((float)((body.maxShield * (0.9f + 0.1 * stackCount) / body.damage) + 1));
                 values.Add(1f);
                 return values;
             };
@@ -1396,8 +1393,8 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.calculateValuesFlat = (stackCount) =>
             {
                 List<float> values = new();
-                values.Add(2 * stackCount+1);
-                values.Add((0.02f * stackCount+0.01f)*3);
+                values.Add(2 * stackCount + 1);
+                values.Add((0.02f * stackCount + 0.01f) * 3);
                 return values;
             };
             allItemDefinitions.Add((int)DLC3Content.Items.SpeedOnPickup.itemIndex, itemStat);
@@ -1410,7 +1407,7 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.calculateValuesFlat = (stackCount) =>
             {
                 List<float> values = new();
-                values.Add(2.4f+0.85f*(stackCount-1));
+                values.Add(2.4f + 0.85f * (stackCount - 1));
                 return values;
             };
             allItemDefinitions.Add((int)DLC3Content.Items.DronesDropDynamite.itemIndex, itemStat);
@@ -1544,7 +1541,7 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.descriptions.Add("Projectiles Blocked: ");
             itemStat.valueTypes.Add(ItemStatsDef.ValueType.Utility);
             itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Number);
-            itemStat.descriptions.Add("Cooldown: "); 
+            itemStat.descriptions.Add("Cooldown: ");
             itemStat.valueTypes.Add(ItemStatsDef.ValueType.Utility);
             itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Seconds);
             itemStat.calculateValuesBody = (body, stackCount) =>
@@ -1569,8 +1566,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.ExtraLife.itemIndex, itemStat);
-            
-            
+
+
             //Electric Boomerang
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Proc Chance: ");
@@ -1616,8 +1613,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.Icicle.itemIndex, itemStat);
-            
-            
+
+
             //Growth Nectar
             //Removed stacking -> Increasing Stats per buff
             itemStat = new ItemStatsDef();
@@ -1789,8 +1786,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.LaserTurbine.itemIndex, itemStat);
-            
-            
+
+
             //Runic lens
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Extra Proc Chance: ");
@@ -1813,7 +1810,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 //Damage limited to 7500%
                 values.Add(MathF.Min(.03f * stackCount, 0.75f));
                 values.Add(MathF.Min(1f + (0.5f * stackCount), 75f));
-                values.Add(0.5f);              
+                values.Add(0.5f);
                 return values;
             };
             allItemDefinitions.Add((int)DLC2Content.Items.MeteorAttackOnHighDamage.itemIndex, itemStat);
@@ -1863,8 +1860,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.ArmorReductionOnHit.itemIndex, itemStat);
-            
-                        
+
+
             //Sonorous Whispers
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Large Monster Drop Chance: ");
@@ -1877,13 +1874,13 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 List<float> values = new();
                 // Note ! it is calculated with luck, cannot trigger more than once
-                values.Add(1f); 
+                values.Add(1f);
                 values.Add(Utils.CalculateChanceWithLuck(.04f + .01f * stackCount, luck));
                 return values;
             };
             allItemDefinitions.Add((int)DLC2Content.Items.ItemDropChanceOnKill.itemIndex, itemStat);
 
-            
+
             //Soulbound Catalyst
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Cooldown Reduction: ");
@@ -1956,8 +1953,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.HeadHunter.itemIndex, itemStat);
-            
-            
+
+
             //War Bonds
             itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Max Health Damage: ");
@@ -1993,7 +1990,7 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.calculateValuesFlat = (stackCount) =>
             {
                 List<float> values = new();
-                values.Add(10* (stackCount));
+                values.Add(10 * (stackCount));
                 return values;
             };
             allItemDefinitions.Add((int)DLC3Content.Items.Duplicator.itemIndex, itemStat);
@@ -2125,8 +2122,8 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.calculateValuesFlat = (stackCount) =>
             {
                 List<float> values = new();
-                values.Add(Mathf.Pow(stackCount,0.5f));
-                values.Add(Mathf.Pow(stackCount,1));
+                values.Add(Mathf.Pow(stackCount, 0.5f));
+                values.Add(Mathf.Pow(stackCount, 1));
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.TitanGoldDuringTP.itemIndex, itemStat);
@@ -2179,7 +2176,7 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.calculateValuesFlat = (stackCount) =>
             {
                 List<float> values = new();
-                 values.Add(stackCount);
+                values.Add(stackCount);
                 values.Add(0f);
                 return values;
             };
@@ -2322,7 +2319,7 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.calculateValuesFlat = (stackCount) =>
             {
                 List<float> values = new();
-                values.Add(15 * Mathf.Pow(0.8f, stackCount-1));
+                values.Add(15 * Mathf.Pow(0.8f, stackCount - 1));
                 return values;
             };
             allItemDefinitions.Add((int)DLC3Content.Items.ShockDamageAura.itemIndex, itemStat);
@@ -2732,10 +2729,10 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 List<float> values = new();
                 int stackM = stackCount - 1;
-                values.Add(-1f + 0.7f*Mathf.Pow(0.9f, stackM));
                 values.Add(-1f + 0.7f * Mathf.Pow(0.9f, stackM));
                 values.Add(-1f + 0.7f * Mathf.Pow(0.9f, stackM));
-                values.Add(-20-15*stackCount);
+                values.Add(-1f + 0.7f * Mathf.Pow(0.9f, stackM));
+                values.Add(-20 - 15 * stackCount);
                 return values;
             };
             allItemDefinitions.Add((int)DLC3Content.Items.TransferDebuffOnHit.itemIndex, itemStat);
@@ -2831,7 +2828,7 @@ namespace LookingGlass.ItemStatsNameSpace
                 List<float> values = new();
                 values.Add(stackCount);
                 values.Add(60f / stackCount);
-                return values; 
+                return values;
             };
             allItemDefinitions.Add((int)DLC1Content.Items.VoidMegaCrabItem.itemIndex, itemStat);
 
@@ -3020,7 +3017,7 @@ namespace LookingGlass.ItemStatsNameSpace
             itemStat.calculateValuesFlat = (stackCount) =>
             {
                 List<float> values = new();
-                values.Add(-(1-Mathf.Pow(0.95f, (float)stackCount)));
+                values.Add(-(1 - Mathf.Pow(0.95f, (float)stackCount)));
                 return values;
             };
             allItemDefinitions.Add((int)RoR2Content.Items.TonicAffliction.itemIndex, itemStat);
