@@ -157,8 +157,7 @@ namespace LookingGlass.ItemStatsNameSpace
         {
             orig(self);
             //Debug.Log("SCOREBOARD");
-           
-         
+     
             if (fullDescInHud.Value)
             {
                 for (int i = 0; i < self.itemInventoryDisplay.itemIcons.Count; i++)
@@ -207,9 +206,10 @@ namespace LookingGlass.ItemStatsNameSpace
             {
                 //Why was there a "In Proc Dict" check for this?
                 //Maybe could do if cooldown == 0 then dont show but it's fine
-                desc.Append("\n\nSkill Cooldown: <style=\"cIsUtility\">" + CalculateSkillCooldown(targetSkill).ToString("0.00") + "s</style>");
+                var cooldown = CalculateSkillCooldown(targetSkill);
+                desc.Append("\n\nSkill Cooldown: <style=\"cIsUtility\">" +cooldown.ToString("0.00") + "s</style>");
 
-                if (targetSkill.finalRechargeInterval != targetSkill.skillDef.baseRechargeInterval)
+                if (cooldown != targetSkill.skillDef.baseRechargeInterval)
                 {
                     //If final recharge differs from base, show base spereately?
                     String cooldownReductionFormatted = ((1 - (self.targetSkill.finalRechargeInterval / self.targetSkill.skillDef.baseRechargeInterval)) * 100).ToString(StatsDisplayDefinitions.floatPrecision);
@@ -447,6 +447,8 @@ namespace LookingGlass.ItemStatsNameSpace
                 if (itemStatsCalculations.Value && ItemDefinitions.allItemDefinitions.ContainsKey((int)itemDef.itemIndex))
                 {
                     ItemStatsDef statsDef = ItemDefinitions.allItemDefinitions[(int)itemDef.itemIndex];
+
+                    
                     if (withOneMore && statsDef.descriptions.Count != 0)
                     {
                         if (newItemCount == 0 || forceNew)
@@ -459,31 +461,34 @@ namespace LookingGlass.ItemStatsNameSpace
                         }
                         newItemCount++;
                     }
- 
-                    List<float> values;
-                    if (statsDef.calculateValuesFlat != null)
+
+                    if (!statsDef.isScrap || master.inventory.GetItemCountEffective(DLC3Content.Items.StatsFromScrap) > 0)
                     {
-                        values = statsDef.calculateValuesFlat(newItemCount);
-                    }
-                    else
-                    {
-                        if (statsDef.calculateValuesNew != null)
+                        List<float> values;
+                        if (statsDef.calculateValuesFlat != null)
                         {
-                            values = statsDef.calculateValuesNew(master ? master.luck : 0, newItemCount, 1f);
-                        }
-                        else if (statsDef.calculateValues != null)
-                        {
-                            values = statsDef.calculateValues(master, newItemCount);
+                            values = statsDef.calculateValuesFlat(newItemCount);
                         }
                         else
                         {
-                            values = statsDef.calculateValuesBody(master ? master.GetBody() : LocalUserManager.GetFirstLocalUser().cachedBody, newItemCount);
+                            if (statsDef.calculateValuesNew != null)
+                            {
+                                values = statsDef.calculateValuesNew(master ? master.luck : 0, newItemCount, 1f);
+                            }
+                            else if (statsDef.calculateValues != null)
+                            {
+                                values = statsDef.calculateValues(master, newItemCount);
+                            }
+                            else
+                            {
+                                values = statsDef.calculateValuesBody(master ? master.GetBody() : LocalUserManager.GetFirstLocalUser().cachedBody, newItemCount);
+                            }
                         }
-                    }
               
-                    if (values != null)
-                    {
-                        GetItemStatsFormatted(ref statsDef, ref values, ref itemDescription, true);
+                        if (values != null)
+                        {
+                            GetItemStatsFormatted(ref statsDef, ref values, ref itemDescription, true);
+                        }
                     }
                 }
             }

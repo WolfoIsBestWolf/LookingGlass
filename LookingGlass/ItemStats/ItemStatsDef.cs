@@ -61,6 +61,7 @@ namespace LookingGlass.ItemStatsNameSpace
         public Func<int, List<float>> calculateValuesFlat = null;               //If flat and uninfluenced
         public Func<float, int, float, List<float>> calculateValuesNew = null;   //If Luck or Proc affected
 
+        public bool isScrap = false;
         public bool hasChance = false;
         public ChanceScaling chanceScaling = ChanceScaling.Linear;
         //public ValueType chanceValueType = ValueType.Linear;

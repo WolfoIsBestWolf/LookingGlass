@@ -1054,17 +1054,18 @@ namespace LookingGlass.ItemStatsNameSpace
 
 
             ////Regenerating Scrap
-            itemStat = new ItemStatsDef();
+            //Easier to just have the stats for Drifter, as cant really fix them
+            /*itemStat = new ItemStatsDef();
             itemStat.descriptions.Add("Charges: ");
             itemStat.valueTypes.Add(ItemStatsDef.ValueType.Utility);
             itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Number);
-            itemStat.calculateValuesFlat = (stackCount) =>
+            itemStat.calculateValues = (master, stackCount) =>
             {
                 List<float> values = new();
                 values.Add(stackCount);
                 return values;
             };
-            allItemDefinitions.Add((int)ItemCatalog.FindItemIndex("RegeneratingScrap"), itemStat);
+            allItemDefinitions.Add(DLC1Content.Items.RegenratingScrap, itemStat);*/
 
 
             //Rose Buckler
@@ -3123,6 +3124,64 @@ namespace LookingGlass.ItemStatsNameSpace
             allItemDefinitions.Add((int)DLC3Content.Items.WyrmOnHit.itemIndex, itemStat);
 
             #endregion
+
+            #region Scrap (Drifter)
+            //Scrap White
+            itemStat = new ItemStatsDef();
+            itemStat.descriptions.Add("Movement Speed: ");
+            itemStat.valueTypes.Add(ItemStatsDef.ValueType.Utility);
+            itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Percentage);
+            itemStat.isScrap = true;
+            itemStat.calculateValues = (master, stackCount) =>
+            {
+                List<float> values = new();
+                values.Add(0.06f * stackCount);
+                return values;
+            };
+            allItemDefinitions.Add((int)RoR2Content.Items.ScrapWhite.itemIndex, itemStat);
+            //Scrap Green
+            itemStat = new ItemStatsDef();
+            itemStat.descriptions.Add("Base Regen: ");
+            itemStat.valueTypes.Add(ItemStatsDef.ValueType.Healing);
+            itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.FlatHealing);
+            itemStat.isScrap = true;
+            itemStat.calculateValues = (master, stackCount) =>
+            {
+                List<float> values = new();
+                values.Add(3 * stackCount);
+                return values;
+            };
+            allItemDefinitions.Add((int)RoR2Content.Items.ScrapGreen.itemIndex, itemStat);
+            allItemDefinitions.Add((int)DLC1Content.Items.RegeneratingScrap.itemIndex, itemStat);
+            //Scrap Red
+            itemStat = new ItemStatsDef();
+            itemStat.descriptions.Add("Attack Speed: ");
+            itemStat.valueTypes.Add(ItemStatsDef.ValueType.Damage);
+            itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Percentage);
+            itemStat.isScrap = true;
+            itemStat.calculateValues = (master, stackCount) =>
+            {
+                List<float> values = new();
+                values.Add(0.30f * stackCount);
+                return values;
+            };
+            allItemDefinitions.Add((int)RoR2Content.Items.ScrapRed.itemIndex, itemStat);
+            //Scrap Yellow
+            itemStat = new ItemStatsDef();
+            itemStat.descriptions.Add("Cooldown Reduction: ");
+            itemStat.valueTypes.Add(ItemStatsDef.ValueType.Utility);
+            itemStat.measurementUnits.Add(ItemStatsDef.MeasurementUnits.Percentage);
+            itemStat.isScrap = true;
+            itemStat.calculateValues = (master, stackCount) =>
+            {
+                List<float> values = new();
+                values.Add(Utils.GetExponentialStacking(0.25f, 0.25f, stackCount));
+                return values;
+            };
+            allItemDefinitions.Add((int)RoR2Content.Items.ScrapYellow.itemIndex, itemStat);
+
+            #endregion
+
 
 
             #region ---------- Equipment -------------------------- 

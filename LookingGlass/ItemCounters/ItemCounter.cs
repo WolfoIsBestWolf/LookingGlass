@@ -120,9 +120,15 @@ namespace LookingGlass.ItemCounters
             ReadOnlySpan<SparseIndex> itemIndices = inv.inner.GetNonDefaultIndicesSpan();
             for (int i = 0; i < itemIndices.Length; i++)
             {
+                inv.inner.GetValueSafe(itemIndices[i]);
+ 
                 SparseIndex index = itemIndices[i];
                 num += itemCounts[(int)index];
-                array[(int)ItemCatalog.GetItemDef((ItemIndex)index).tier] += itemCounts[(int)index];
+                int tier = (int)ItemCatalog.GetItemDef((ItemIndex)index).tier;
+                if (tier < array.Length)
+                {
+                    array[tier] += itemCounts[(int)index];
+                }
             }
             return num;
         }
@@ -134,10 +140,9 @@ namespace LookingGlass.ItemCounters
 
         public void UpdateItemCountText(Action<ScoreboardStrip> orig, ScoreboardStrip self)
         {
-            //Why not just skip orig(self) here tbh
+            orig(self);
             if (!self.inventory || (!cfg_TieredItemCounters.Value && !cfg_TotalTempCounter.Value))
             {
-                orig(self); 
                 return;
             }
             if (needToUpdate < 0) 
@@ -148,8 +153,8 @@ namespace LookingGlass.ItemCounters
             //Debug.Log("UpdateItemCountText");
             
 
-            itemCountsPerm = new int[ItemTierCatalog.itemTierDefs.Length+2];
-            itemCountsTemp = new int[ItemTierCatalog.itemTierDefs.Length+2];
+            itemCountsPerm = new int[(int)ItemTier.AssignedAtRuntime];
+            itemCountsTemp = new int[(int)ItemTier.AssignedAtRuntime];
 
             int totalItems = NewGetTotalItemStacks(self.inventory.permanentItemStacks, itemCountsPerm);
             int tempItems = NewGetTotalItemStacks(self.inventory.tempItemsStorage.tempItemStacks, cfg_EffectiveCount.Value ? itemCountsPerm : itemCountsTemp);

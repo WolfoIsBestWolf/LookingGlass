@@ -187,7 +187,7 @@ namespace LookingGlass.StatsDisplay
 
 
             #region Portal / Teleporter Stuff
-            StatsDisplayClass.statDictionary.Add("mountainShrines", cachedUserBody => { return $"{utilityString}{((TeleporterInteraction.instance is not null ? TeleporterInteraction.instance.shrineBonusStacks : "N/A"))}{styleString}"; });
+            StatsDisplayClass.statDictionary.Add("mountainShrines", cachedUserBody => { return $"{utilityString}{((TeleporterInteraction.instance is not null ? TeleporterInteraction.instance._shrineBonusStacks : "N/A"))}{styleString}"; });
 
             StatsDisplayClass.statDictionary.Add("shopPortal", cachedUserBody => { return $"{utilityString}{(TeleporterInteraction.instance ? BasePlugin.instance.portalTracking.shopPortal.ToString() : "N/A")}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("goldPortal", cachedUserBody => { return $"{damageString}{(TeleporterInteraction.instance ? BasePlugin.instance.portalTracking.goldPortal.ToString() : "N/A")}{styleString}"; });

@@ -763,6 +763,7 @@ namespace LookingGlass.StatsDisplay
                                     v.childAlignment = TextAnchor.UpperLeft;
                                 }
                                 statTracker = g.transform;
+                                Run.instance.StartCoroutine(SetLastDelayed());
                                 break;
                             }
                         }
@@ -867,6 +868,11 @@ namespace LookingGlass.StatsDisplay
             ? textComponent.fontSize * (nlines + 1)
             : textComponent.preferredHeight;
             layoutElement.preferredHeight = intendedHeight;
+        }
+        IEnumerator SetLastDelayed()//SetToASetSiblingIndex to be consistent with other mods
+        {
+            yield return new WaitForSeconds(1);
+            statTracker.SetAsLastSibling();
         }
 
         // basic version of vector2 sliders option window
