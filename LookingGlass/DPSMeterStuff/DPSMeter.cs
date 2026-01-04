@@ -1,28 +1,24 @@
 ﻿using BepInEx.Configuration;
 using LookingGlass.Base;
-using LookingGlass.BuffDescriptions;
 using MonoMod.RuntimeDetour;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
 using RoR2;
-using RoR2.UI;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace LookingGlass.DPSMeterStuff
 {
     internal class DPSMeter : BaseThing
     {
-       
+
         public ulong killsThisStage = 0;
         public ulong killsThisRun = 0;
- 
- 
+
+
         public float damageDealtSincePeriod = 0;
         public float currentCombatDamage = 0;
         public static ConfigEntry<float> maxComboConfigEntry;
@@ -64,15 +60,15 @@ namespace LookingGlass.DPSMeterStuff
             maxKillComboConfigEntry = BasePlugin.instance.Config.Bind<ulong>("Stats", "Max Kill Combo", 0, "What are you gonna do, cheat the number?");
             maxKillCombo = maxKillComboConfigEntry.Value;
 
-            
- 
+
+
             new Hook(typeof(GlobalEventManager).GetMethod(nameof(GlobalEventManager.ClientDamageNotified), BindingFlags.Public | BindingFlags.Static),
                 TrackDamage);
 
-            new Hook(typeof(Run).GetMethod(nameof(Run.OnEnable), BindingFlags.NonPublic | BindingFlags.Instance), 
+            new Hook(typeof(Run).GetMethod(nameof(Run.OnEnable), BindingFlags.NonPublic | BindingFlags.Instance),
                 RunOnEnable);
 
-            new Hook(typeof(Stage).GetMethod(nameof(Stage.PreStartClient), BindingFlags.Public | BindingFlags.Instance), 
+            new Hook(typeof(Stage).GetMethod(nameof(Stage.PreStartClient), BindingFlags.Public | BindingFlags.Instance),
                 ResetOnStage);
         }
 
@@ -85,7 +81,7 @@ namespace LookingGlass.DPSMeterStuff
         {
             ModSettingsManager.AddOption(new SliderOption(dpsDuration, new SliderConfig() { restartRequired = false, min = 3, max = 10f, FormatString = "{0:0}s" }));
             ModSettingsManager.AddOption(new CheckBoxOption(disableDPSMeter, new CheckBoxConfig() { restartRequired = true }));
-           
+
         }
 
         void ResetOnStage(Action<Stage> orig, Stage self)
@@ -111,7 +107,7 @@ namespace LookingGlass.DPSMeterStuff
                 if (damageDealtMessage.attacker == LocalUserManager.GetFirstLocalUser().cachedBodyObject)
                 //if (damageDealtMessage.attacker == LocalUserManager.GetFirstLocalUser().cachedBodyObject || damageDealtMessage.attacker.TryGetComponent<CharacterBody>(out var attacker) || attacker.master.minionOwnership && attacker.master.minionOwnership.ownerMaster && LocalUserManager.GetFirstLocalUser().cachedMasterObject))
                 {
-             
+
                     damageDealtSincePeriod += damageDealtMessage.damage;
                     currentCombatDamage += damageDealtMessage.damage;
                     if (maxCombo < currentCombatDamage)

@@ -13,6 +13,7 @@ using RoR2.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using TMPro;
 using Unity.Jobs;
@@ -20,7 +21,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
-using System.Reflection;
 
 namespace LookingGlass.StatsDisplay
 {
@@ -32,12 +32,13 @@ namespace LookingGlass.StatsDisplay
             CategoryChest,
             None,
         }
- 
+
         public enum StatsDisplayEnum
         {
             Off,
             Same_On_Both,
             Different_On_Tab,
+            Only_Show_On_Main,
             Only_Show_On_Tab,
             Show_Only_Stats_On_Tab,
         }
@@ -57,9 +58,9 @@ namespace LookingGlass.StatsDisplay
         public static ConfigEntry<StatDisplayPreset> statStringPresets;
         public static ConfigEntry<bool> movePurchaseText; //-240x
         public static ConfigEntry<bool> checkIfOldDefaultSettings;
-         
+
         public static ConfigEntry<StatsDisplayEnum> statsDisplay;
-     
+
         public static ConfigEntry<string> secondaryStatsDisplayString;
         public static ConfigEntry<string> statsDisplayString;
         public static ConfigEntry<float> statsDisplaySize;
@@ -139,8 +140,8 @@ namespace LookingGlass.StatsDisplay
 
             //Could maybe combine into 1 config?
             statsDisplay = BasePlugin.instance.Config.Bind<StatsDisplayEnum>("Stats Display", "Stats Display", StatsDisplayEnum.Different_On_Tab, "Enables Stats Display in various cases.\n\n-Same stats regardless of scoreboard\n\n-Tab stats on scoreboard for 2 different stat displays\n\n-Only show when Scoreboard is open\n\n-Only show when scoreboard is open and hide everything else when it is open. (In case other mods decide to use that space, to avoid the clutter)");
-    
-      
+
+
             statsDisplay.SettingChanged += Display_SettingChanged;
             statsDisplayString = BasePlugin.instance.Config.Bind<string>("Stats Display", "Stats Display String",
                 //Removing Combo timer just cuz
@@ -176,7 +177,7 @@ namespace LookingGlass.StatsDisplay
                 "<margin-left=0.6em>"
                 + "<size=115%>Stats</size>\n"
                 + "Damage: [damage]\n"
-                + "Attack Speed: [attackSpeed]\n" 
+                + "Attack Speed: [attackSpeed]\n"
                 + "Crit Chance: [critWithLuck]\n"
                 //+ "Crit Stats: [critWithLuck] | [critMultiplier]\n"
                 + "Bleed Chance: [bleedChanceWithLuck]\n"
@@ -204,10 +205,10 @@ namespace LookingGlass.StatsDisplay
 
             var targetMethod = typeof(ScoreboardController).GetMethod(nameof(ScoreboardController.OnEnable), BindingFlags.NonPublic | BindingFlags.Instance);
             new Hook(targetMethod, OnEnable);
-            
+
             targetMethod = typeof(ScoreboardController).GetMethod(nameof(ScoreboardController.OnDisable), BindingFlags.NonPublic | BindingFlags.Instance);
             new Hook(targetMethod, OnDisable);
- 
+
 
             statStringPresets = BasePlugin.instance.Config.Bind<StatDisplayPreset>("Stats Display", "Preset", StatDisplayPreset.Set, "Override current Stat Display settings with a premade preset.Further changes can made from there.\n\n" +
                 "Extra: More stats on Tab\n\n" +
@@ -236,7 +237,7 @@ namespace LookingGlass.StatsDisplay
 
         bool SecondaryDisabled()
         {
-            return statsDisplay.Value == StatsDisplayEnum.Same_On_Both;
+            return statsDisplay.Value == StatsDisplayEnum.Same_On_Both || statsDisplay.Value == StatsDisplayEnum.Only_Show_On_Main;
         }
         bool PrimaryDisabled()
         {
@@ -247,13 +248,27 @@ namespace LookingGlass.StatsDisplay
 
             ModSettingsManager.AddOption(new ChoiceOption(statsDisplay, new ChoiceConfig() { restartRequired = false }));
             ModSettingsManager.AddOption(new ChoiceOption(statStringPresets, false));
-            ModSettingsManager.AddOption(new StringInputFieldOption(statsDisplayString, new InputFieldConfig() { 
-                name = "Main Display String", restartRequired = false, lineType = TMP_InputField.LineType.MultiLineNewline, submitOn = InputFieldConfig.SubmitEnum.OnExitOrSubmit, richText = false, checkIfDisabled = PrimaryDisabled }));
-            ModSettingsManager.AddOption(new StringInputFieldOption(secondaryStatsDisplayString, new InputFieldConfig() {
-                name = "Tab Display String", restartRequired = false, lineType = TMP_InputField.LineType.MultiLineNewline, submitOn = InputFieldConfig.SubmitEnum.OnExitOrSubmit, richText = false, checkIfDisabled = SecondaryDisabled }));
+            ModSettingsManager.AddOption(new StringInputFieldOption(statsDisplayString, new InputFieldConfig()
+            {
+                name = "Main Display String",
+                restartRequired = false,
+                lineType = TMP_InputField.LineType.MultiLineNewline,
+                submitOn = InputFieldConfig.SubmitEnum.OnExitOrSubmit,
+                richText = false,
+                checkIfDisabled = PrimaryDisabled
+            }));
+            ModSettingsManager.AddOption(new StringInputFieldOption(secondaryStatsDisplayString, new InputFieldConfig()
+            {
+                name = "Tab Display String",
+                restartRequired = false,
+                lineType = TMP_InputField.LineType.MultiLineNewline,
+                submitOn = InputFieldConfig.SubmitEnum.OnExitOrSubmit,
+                richText = false,
+                checkIfDisabled = SecondaryDisabled
+            }));
 
 
-            
+
 
             ModSettingsManager.AddOption(new SliderOption(statsDisplaySize, new SliderConfig() { restartRequired = false, min = -1, max = 24, FormatString = "{0:F1}" }));
             //ModSettingsManager.AddOption(new StepSliderOption(statsDisplaySize, new StepSliderConfig() { restartRequired = false, min = -1, max = 24, increment = 0.2f,FormatString = "{0:F1}" }));
@@ -314,7 +329,7 @@ namespace LookingGlass.StatsDisplay
                 + "Combo: [currentCombatDamage]\n"
                 + "Combo Timer: [remainingComboDuration]\n"
                 + "Max Combo: [maxCombo]";
-            string old1_2 = 
+            string old1_2 =
                 "<size=120%>Stats</size>\n"
                 + "Luck: [luck]\n"
                 + "Damage: [baseDamage]\n"
@@ -330,7 +345,7 @@ namespace LookingGlass.StatsDisplay
                 + "Combo: [currentCombatDamage]\n"
                 + "Combo Timer: [remainingComboDuration]\n"
                 + "Max Combo: [maxCombo]";
-            string old2_1 = 
+            string old2_1 =
                 "<size=120%>Stats</size>\n"
                 + "Luck: [luck]\n"
                 + "Damage: [damage]\n"
@@ -346,7 +361,7 @@ namespace LookingGlass.StatsDisplay
                 + "Max Combo: [maxCombo]\n"
                 + "<size=120%>Portals:</size> \n"
                 + "<size=50%>Gold:[goldPortal] Shop:[shopPortal] Celestial:[msPortal] Void:[voidPortal]</size>";
-            string old2_2 = 
+            string old2_2 =
                 "<size=120%>Stats</size>\n"
                 + "Luck: [luck]\n"
                 + "Damage: [baseDamage]\n"
@@ -374,7 +389,7 @@ namespace LookingGlass.StatsDisplay
                 reset2 = true;
             }
             #endregion
-             
+
             if (reset1)
             {
                 Debug.Log("Old1 detected");
@@ -462,7 +477,7 @@ namespace LookingGlass.StatsDisplay
                     //statsDisplay.Value = StatsDisplayEnum.Show_Only_Stats_On_Tab;
                     //
                     //
- 
+
                     new1 = string.Empty;
                     new2 =
                         "<size=16px><line-height=7.5px>"
@@ -492,7 +507,7 @@ namespace LookingGlass.StatsDisplay
                     //"<size=16px><line-height=7.5px>\r\n<align=center>Stats:</align>\r\n\r\n</line-height></size><margin-left=0.6em>Damage: [damage]\r\nAttack Speed: [attackSpeedPercent]\r\nCrit Stats: [critWithLuck] | [critMultiplier]\r\nBleed Chance: [bleedChanceWithLuck]\r\nRegen: [regenHp]\r\nArmor: [armor] | [armorDamageReduction]\r\nEhp: [effectiveHealth]\r\nSpeed: [speedPercent]\r\nJumps: [availableJumps] / [maxJumps]\r\nLuck: [luck]\r\nCurse: [curseHealthReduction]\r\nTotal Kills: [killCountRun]\r\nMax Combo: [maxComboThisRun]\r\nMountain Shrines: [mountainShrines]\r\nPortals: [portals] \r\n</line-height></margin>"
                     //"<size=16px><line-height=7.5px>\r\n<align=center>Stats:</align>\r\n\r\n\r\n</line-height></size><margin-left=0.6em>Damage: [damage]\r\nAttack Speed: [attackSpeedPercent]\r\nCrit Stats: [critWithLuck] | [critMultiplier]\r\nBleed Chance: [bleedChanceWithLuck]\r\nRegen: [regenHp]\r\nArmor: [armor] | [armorDamageReduction]\r\nEhp: [effectiveHealth]\r\nSpeed: [speedPercent]\r\nJumps: [availableJumps] / [maxJumps]\r\nLuck: [luck]\r\nCurse: [curseHealthReduction]\r\nTotal Kills: [killCountRun]\r\nMax Combo: [maxComboThisRun]\r\nMountain Shrines: [mountainShrines]\r\nPortals: [portals] \r\n</line-height></margin>"
                     break;
-                
+
                 case StatDisplayPreset.Simpler:
                     //No Combo or DPS stuff
                     //
@@ -525,7 +540,7 @@ namespace LookingGlass.StatsDisplay
                          + "Portals: [portals]\n"
                          + "</margin>";
                     break;
-                
+
                 case StatDisplayPreset.Minimal:
                     new1 =
                         "<margin-left=0.6em><line-height=110%>"
@@ -539,7 +554,7 @@ namespace LookingGlass.StatsDisplay
                           + "Portal: [portals]"
                           + "</line-height></margin>";
                     break;
-                
+
                 case StatDisplayPreset.Old:
                     //Do not modify
                     //Ugly BetterUI version
@@ -765,6 +780,7 @@ namespace LookingGlass.StatsDisplay
                                     v.childAlignment = TextAnchor.UpperLeft;
                                 }
                                 statTracker = g.transform;
+                                Run.instance.StartCoroutine(SetLastDelayed());
                                 break;
                             }
                         }
@@ -801,6 +817,10 @@ namespace LookingGlass.StatsDisplay
                     {
                         GameObject.Destroy(statTracker.GetComponentInChildren<LanguageTextMeshController>()); //Prevents "Objective:" from showing up briefly
                         if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Tab && !scoreBoardOpen)
+                        {
+                            statTracker.gameObject.SetActive(false);
+                        }
+                        else if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Main && scoreBoardOpen)
                         {
                             statTracker.gameObject.SetActive(false);
                         }
@@ -869,6 +889,11 @@ namespace LookingGlass.StatsDisplay
             ? textComponent.fontSize * (nlines + 1)
             : textComponent.preferredHeight;
             layoutElement.preferredHeight = intendedHeight;
+        }
+        IEnumerator SetLastDelayed()//SetToASetSiblingIndex to be consistent with other mods
+        {
+            yield return new WaitForSeconds(1);
+            statTracker.SetAsLastSibling();
         }
 
         // basic version of vector2 sliders option window
@@ -983,10 +1008,6 @@ namespace LookingGlass.StatsDisplay
 
         static string GenerateStatsText()
         {
-            /*if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Tab && !scoreBoardOpen)
-            {
-                return string.Empty;
-            }*/
             Profiler.BeginSample("LookingGlass.StatsDisplay.Regex");
 
             string statsText = statsDisplay.Value >= StatsDisplayEnum.Different_On_Tab && scoreBoardOpen ? secondaryStatsDisplayString.Value : statsDisplayString.Value;
@@ -1011,22 +1032,26 @@ namespace LookingGlass.StatsDisplay
             if (statsDisplay.Value != StatsDisplayEnum.Off && cachedUserBody)
             {
                 regexHandle = new RegexJob().Schedule(regexHandle);
-                timer = 0; 
+                timer = 0;
                 FixedUpdate();
             }
 
             if (statTracker)
             {
                 if (statsDisplay.Value == StatsDisplayEnum.Show_Only_Stats_On_Tab)
-                {                
+                {
                     //0 is Artifact Info and cannot be disabled // automatically turns on so dont mess with it.
-                    for(int i = 1; i < statTracker.parent.childCount; i++)
+                    for (int i = 1; i < statTracker.parent.childCount; i++)
                     {
                         statTracker.parent.GetChild(i).gameObject.SetActive(!scoreBoardOpen);
                     }
                 }
 
                 if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Tab && !scoreBoardOpen)
+                {
+                    statTracker.gameObject.SetActive(false);
+                }
+                else if (statsDisplay.Value >= StatsDisplayEnum.Only_Show_On_Main && scoreBoardOpen)
                 {
                     statTracker.gameObject.SetActive(false);
                 }

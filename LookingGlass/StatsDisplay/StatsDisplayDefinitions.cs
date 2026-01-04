@@ -31,7 +31,7 @@ namespace LookingGlass.StatsDisplay
             StatsDisplayClass.statDictionary.Add("baseDamage", StatsDisplayClass.statDictionary["damage"]);
 
             StatsDisplayClass.statDictionary.Add("damagePercent", cachedUserBody => { return $"{damageString}{((cachedUserBody.damage / (cachedUserBody.baseDamage * (cachedUserBody.level * 0.2f + 0.8f))) * 100).ToString(floatPrecision)}%{styleString}"; });
-            StatsDisplayClass.statDictionary.Add("damagePercentWithWatch", cachedUserBody => { return $"{damageString}{((cachedUserBody.damage / (cachedUserBody.baseDamage * (cachedUserBody.level * 0.2f + 0.8f)) * (1+0.2 * cachedUserBody.inventory.GetItemCountEffective(DLC1Content.Items.FragileDamageBonus))) * 100).ToString(floatPrecision)}%{styleString}"; });
+            StatsDisplayClass.statDictionary.Add("damagePercentWithWatch", cachedUserBody => { return $"{damageString}{((cachedUserBody.damage / (cachedUserBody.baseDamage * (cachedUserBody.level * 0.2f + 0.8f)) * (1 + 0.2 * cachedUserBody.inventory.GetItemCountEffective(DLC1Content.Items.FragileDamageBonus))) * 100).ToString(floatPrecision)}%{styleString}"; });
 
             StatsDisplayClass.statDictionary.Add("attackSpeed", cachedUserBody => { return $"{damageString}{(cachedUserBody.attackSpeed).ToString(floatPrecision)}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("attackSpeedPercent", cachedUserBody => { return $"{damageString}{((cachedUserBody.attackSpeed / cachedUserBody.baseAttackSpeed) * 100).ToString(floatPrecision)}%{styleString}"; });
@@ -71,7 +71,7 @@ namespace LookingGlass.StatsDisplay
             StatsDisplayClass.statDictionary.Add("maxHealth", cachedUserBody => { return $"{healingString}{(cachedUserBody.maxHealth)}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("maxShield", cachedUserBody => { return $"{healingString}{(cachedUserBody.maxShield)}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("maxBarrier", cachedUserBody => { return $"{healingString}{(cachedUserBody.maxBarrier)}{styleString}"; });
-            StatsDisplayClass.statDictionary.Add("shieldFraction", cachedUserBody => { return $"{healingString}{((cachedUserBody.maxShield / cachedUserBody.healthComponent.fullCombinedHealth) *100).ToString(floatPrecision)}%{styleString}"; });
+            StatsDisplayClass.statDictionary.Add("shieldFraction", cachedUserBody => { return $"{healingString}{((cachedUserBody.maxShield / cachedUserBody.healthComponent.fullCombinedHealth) * 100).ToString(floatPrecision)}%{styleString}"; });
             StatsDisplayClass.statDictionary.Add("barrierDecayRate", cachedUserBody => { return $"{healingString}{(cachedUserBody.healthComponent.GetBarrierDecayRate()).ToString(floatPrecision)}{styleString}"; });
 
 
@@ -81,14 +81,16 @@ namespace LookingGlass.StatsDisplay
 
 
             //Current Health / ArmorReduc
-            StatsDisplayClass.statDictionary.Add("effectiveHealth", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("effectiveHealth", cachedUserBody =>
+            {
                 if (!cachedUserBody.healthComponent)
                 {
                     return $"{healingString}N/A{styleString}";
                 }
                 return $"{healingString}{((cachedUserBody.healthComponent.combinedHealth) / (100f / (100f + cachedUserBody.armor))).ToString(floatPrecision)}{styleString}";
             });
-            StatsDisplayClass.statDictionary.Add("effectiveMaxHealth", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("effectiveMaxHealth", cachedUserBody =>
+            {
                 if (!cachedUserBody.healthComponent)
                 {
                     return $"{healingString}N/A{styleString}";
@@ -96,7 +98,8 @@ namespace LookingGlass.StatsDisplay
                 return $"{healingString}{((cachedUserBody.healthComponent.fullCombinedHealth) / (100f / (100f + cachedUserBody.armor))).ToString(floatPrecision)}{styleString}";
             });
 
-            StatsDisplayClass.statDictionary.Add("healthPercentage", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("healthPercentage", cachedUserBody =>
+            {
                 if (!cachedUserBody.healthComponent)
                 {
                     return $"{healingString}N/A{styleString}";
@@ -107,7 +110,8 @@ namespace LookingGlass.StatsDisplay
             StatsDisplayClass.statDictionary.Add("critHeal", cachedUserBody => { return $"{healingString}{(cachedUserBody.critHeal).ToString(floatPrecision)}{styleString}"; });
             //Unused stat do not document
 
-            StatsDisplayClass.statDictionary.Add("hasOneShotProtection", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("hasOneShotProtection", cachedUserBody =>
+            {
                 if (!cachedUserBody.healthComponent)
                 {
                     return $"{healingString}N/A{styleString}";
@@ -131,7 +135,7 @@ namespace LookingGlass.StatsDisplay
             StatsDisplayClass.statDictionary.Add("speed", cachedUserBody => { return $"{utilityString}{(cachedUserBody.moveSpeed).ToString(floatPrecision)}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("speedPercent", cachedUserBody => { return $"{utilityString}{((cachedUserBody.moveSpeed / cachedUserBody.baseMoveSpeed / (cachedUserBody.isSprinting ? cachedUserBody.sprintingSpeedMultiplier : 1)) * 100).ToString(floatPrecision)}%{styleString}"; });
             StatsDisplayClass.statDictionary.Add("speedPercentSprintAffected", cachedUserBody => { return $"{utilityString}{((cachedUserBody.moveSpeed / cachedUserBody.baseMoveSpeed) * 100).ToString(floatPrecision)}%{styleString}"; });
-            
+
             StatsDisplayClass.statDictionary.Add("acceleration", cachedUserBody => { return $"{utilityString}{(cachedUserBody.acceleration).ToString(floatPrecision)}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("velocity", cachedUserBody =>
             {
@@ -147,7 +151,8 @@ namespace LookingGlass.StatsDisplay
             StatsDisplayClass.statDictionary.Add("maxJumpHeight", cachedUserBody => { return $"{utilityString}{(cachedUserBody.maxJumpHeight).ToString(floatPrecision)}{styleString}"; });
 
             StatsDisplayClass.statDictionary.Add("maxJumps", cachedUserBody => { return $"{utilityString}{(cachedUserBody.maxJumpCount)}{styleString}"; });
-            StatsDisplayClass.statDictionary.Add("availableJumps", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("availableJumps", cachedUserBody =>
+            {
                 if (!cachedUserBody.characterMotor)
                 {
                     return $"{utilityString}N/A{styleString}";
@@ -158,15 +163,18 @@ namespace LookingGlass.StatsDisplay
             #endregion
 
             #region Utility Related
-            StatsDisplayClass.statDictionary.Add("luck", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("luck", cachedUserBody =>
+            {
                 return $"{utilityString}{Utils.GetLuckFromCachedUserBody(cachedUserBody).ToString(floatPrecision)}{styleString}";
             });
 
-            StatsDisplayClass.statDictionary.Add("teddyBearBlockChance", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("teddyBearBlockChance", cachedUserBody =>
+            {
                 int stackCount = cachedUserBody.inventory.GetItemCountEffective(RoR2Content.Items.Bear);
                 return $"{utilityString}{(((0.15f * stackCount) / ((0.15f * stackCount) + 1)) * 100f).ToString(floatPrecision)}%{styleString}";
             });
-            StatsDisplayClass.statDictionary.Add("saferSpacesCD", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("saferSpacesCD", cachedUserBody =>
+            {
                 int stackCount = cachedUserBody.inventory.GetItemCountEffective(DLC1Content.Items.BearVoid);
                 if (stackCount == 0)
                 {
@@ -176,7 +184,8 @@ namespace LookingGlass.StatsDisplay
             });
 
             //
-            StatsDisplayClass.statDictionary.Add("instaKillChance", cachedUserBody => {
+            StatsDisplayClass.statDictionary.Add("instaKillChance", cachedUserBody =>
+            {
                 int stackCount = cachedUserBody.inventory.GetItemCount(DLC1Content.Items.CritGlassesVoid);
                 float instakillChance = Utils.CalculateChanceWithLuck(.005f * stackCount, Utils.GetLuckFromCachedUserBody(cachedUserBody)) * 100f;
                 return $"{damageString}{instakillChance.ToString(floatPrecision)}%{styleString}";
@@ -187,7 +196,7 @@ namespace LookingGlass.StatsDisplay
 
 
             #region Portal / Teleporter Stuff
-            StatsDisplayClass.statDictionary.Add("mountainShrines", cachedUserBody => { return $"{utilityString}{((TeleporterInteraction.instance is not null ? TeleporterInteraction.instance.shrineBonusStacks : "N/A"))}{styleString}"; });
+            StatsDisplayClass.statDictionary.Add("mountainShrines", cachedUserBody => { return $"{utilityString}{((TeleporterInteraction.instance is not null ? TeleporterInteraction.instance._shrineBonusStacks : "N/A"))}{styleString}"; });
 
             StatsDisplayClass.statDictionary.Add("shopPortal", cachedUserBody => { return $"{utilityString}{(TeleporterInteraction.instance ? BasePlugin.instance.portalTracking.shopPortal.ToString() : "N/A")}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("goldPortal", cachedUserBody => { return $"{damageString}{(TeleporterInteraction.instance ? BasePlugin.instance.portalTracking.goldPortal.ToString() : "N/A")}{styleString}"; });
@@ -196,7 +205,7 @@ namespace LookingGlass.StatsDisplay
             StatsDisplayClass.statDictionary.Add("greenPortal", cachedUserBody => { return $"{healingString}{(TeleporterInteraction.instance ? BasePlugin.instance.portalTracking._greenPortal.ToString() : "N/A")}{styleString}"; });
 
             StatsDisplayClass.statDictionary.Add("portals", cachedUserBody => BasePlugin.instance.portalTracking.ReturnAllAvailablePortals());
- 
+
             #endregion
 
             #region DPS, Combo, Kills
@@ -209,7 +218,7 @@ namespace LookingGlass.StatsDisplay
             StatsDisplayClass.statDictionary.Add("dps", cachedUserBody => { return $"{damageString}{(BasePlugin.instance.dpsMeter.damageDealtSincePeriod / DPSMeter.DPS_MAX_TIME).ToString("0.#")}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("percentDps", cachedUserBody
              => $"{damageString}{(Mathf.RoundToInt(BasePlugin.instance.dpsMeter.damageDealtSincePeriod * 100f / cachedUserBody.damage / DPSMeter.DPS_MAX_TIME)).ToString()}%{styleString}");
-           
+
             //RoundToInt because (int) often drops a % and Ceil sometimes Adds one.
             //It's really just floating point errors
 
@@ -222,19 +231,19 @@ namespace LookingGlass.StatsDisplay
             StatsDisplayClass.statDictionary.Add("currentCombatKills", cachedUserBody => { return $"{damageString}{BasePlugin.instance.dpsMeter.currentComboKills}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("maxKillCombo", cachedUserBody => { return $"{damageString}{BasePlugin.instance.dpsMeter.maxKillCombo}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("maxKillComboThisRun", cachedUserBody => { return $"{damageString}{BasePlugin.instance.dpsMeter.maxRunKillCombo}{styleString}"; });
-            
+
             StatsDisplayClass.statDictionary.Add("remainingComboDuration", cachedUserBody => { return $"{utilityString}{(int)BasePlugin.instance.dpsMeter.timer + 1}{styleString}"; });
             #endregion
- 
+
             StatsDisplayClass.statDictionary.Add("experience", cachedUserBody => { return $"{utilityString}{(cachedUserBody.experience).ToString(floatPrecision)}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("level", cachedUserBody => { return $"{utilityString}{(cachedUserBody.level)}{styleString}"; });
-  
+
             StatsDisplayClass.statDictionary.Add("difficultyCoefficient", cachedUserBody => { return $"{damageString}{(Run.instance ? Run.instance.difficultyCoefficient.ToString(floatPrecision) : "N/A")}{styleString}"; });
             StatsDisplayClass.statDictionary.Add("stage", cachedUserBody => { return $"{utilityString}{Language.GetString(Stage.instance ? Stage.instance.sceneDef.nameToken : "N/A")}{styleString}"; });
-            
+
             //Does this need saftey checks at all?
             StatsDisplayClass.statDictionary.Add("ping", cachedUserBody => { return $"{gray}{(NetworkServer.active ? "0" : RttManager.GetConnectionRTTInMilliseconds(NetworkManagerSystem.singleton.client.connection).ToString())}ms{styleString}"; });
- 
+
 
             //StatsDisplayClass.statDictionary.Add("time", cachedUserBody => { return $"{utilityString}{RttManager.GetConnectionRTTInMilliseconds(NetworkManagerSystem.singleton.client.connection)}{styleString}"; });
             //StatsDisplayClass.statDictionary.Add("realTime", cachedUserBody => { return $"{utilityString}{RttManager.GetConnectionRTTInMilliseconds(NetworkManagerSystem.singleton.client.connection)}{styleString}"; });

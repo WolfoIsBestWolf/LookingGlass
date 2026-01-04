@@ -1,3 +1,11 @@
+## 1.15.1
+Readded 'orig(self)' to item counters.  
+Fixed issue where having some modded item tiers breaks the item counter.  
+Fixed Crafting sorting being off breaking crafting.
+
+Added stats for scrap as Drifter.  
+Added option to have StatsDisplay only when scoreboard is closed.  
+
 ## 1.15.0
 Condensed Stat Display & sorting options, to be more managable to use in RiskOfOptions. *(14 configs turned into 4)*
 

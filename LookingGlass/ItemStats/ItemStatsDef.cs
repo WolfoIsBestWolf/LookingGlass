@@ -57,10 +57,11 @@ namespace LookingGlass.ItemStatsNameSpace
 
         //Passing along values is work, less work surely more optimized, i hope
         public Func<CharacterBody, int, List<float>> calculateValuesBody = null; //If Needs Body
-        public Func<CharacterMaster, int, List<float>> calculateValues = null;  
+        public Func<CharacterMaster, int, List<float>> calculateValues = null;
         public Func<int, List<float>> calculateValuesFlat = null;               //If flat and uninfluenced
         public Func<float, int, float, List<float>> calculateValuesNew = null;   //If Luck or Proc affected
 
+        public bool isScrap = false;
         public bool hasChance = false;
         public ChanceScaling chanceScaling = ChanceScaling.Linear;
         //public ValueType chanceValueType = ValueType.Linear;

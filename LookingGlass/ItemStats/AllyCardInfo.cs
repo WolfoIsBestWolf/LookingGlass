@@ -1,7 +1,5 @@
 ﻿using BepInEx.Configuration;
 using LookingGlass.Base;
-using LookingGlass.BuffDescriptions;
-using LookingGlass.ItemStatsNameSpace;
 using MonoMod.RuntimeDetour;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
@@ -9,12 +7,9 @@ using RiskOfOptions.Options;
 using RoR2;
 using RoR2.UI;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Reflection;
 
 namespace LookingGlass
 {
@@ -46,7 +41,7 @@ namespace LookingGlass
 
         public void AddRaycaster(Action<AllyCardManager> orig, AllyCardManager self)
         {
-            orig(self); 
+            orig(self);
             if (!self.GetComponent<GraphicRaycaster>())
             {
                 self.gameObject.AddComponent<GraphicRaycaster>();
@@ -77,7 +72,7 @@ namespace LookingGlass
             }
             if (self.sourceMaster && self.cachedSourceCharacterBody)
             {
- 
+
                 TooltipContent content = new TooltipContent();
                 content.titleToken = self.cachedSourceCharacterBody.baseNameToken;
                 content.titleColor = self.cachedSourceCharacterBody.bodyColor;
@@ -86,7 +81,7 @@ namespace LookingGlass
                 {
                     content.titleColor = new Color(0.4902f, 0.8784f, 0.2588f, 1f);
                 }
-                
+
                 DroneIndex drone = DroneCatalog.GetDroneIndexFromBodyIndex(self.cachedSourceCharacterBody.bodyIndex);
                 if (drone != DroneIndex.None)
                 {
@@ -111,6 +106,6 @@ namespace LookingGlass
         public void SetupRiskOfOptions()
         {
         }
- 
+
     }
 }

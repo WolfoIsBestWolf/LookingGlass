@@ -5,14 +5,11 @@ using MonoMod.RuntimeDetour;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RoR2;
 using RoR2.UI;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
-using System.Reflection;
 
 namespace LookingGlass.BuffTimers
 {

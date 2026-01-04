@@ -1,18 +1,15 @@
 ﻿using BepInEx.Configuration;
 using LookingGlass.Base;
+using MonoMod.RuntimeDetour;
+using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RiskOfOptions;
 using RoR2;
+using RoR2.UI;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using RoR2.UI;
-using System.Collections;
-using System.Reflection;
-using MonoMod.RuntimeDetour;
 namespace LookingGlass.ResizeCommandWindow
 {
     internal class ModifyCommandWindow : BaseThing
@@ -59,10 +56,10 @@ namespace LookingGlass.ResizeCommandWindow
                 }
             }
 
-     
+
 
             int itemCount = options.Length;
-        
+
             int maxHeight = 12;
             int value = Mathf.CeilToInt((Mathf.Sqrt(itemCount) + 2));
             GridLayoutGroup gridLayoutGroup = self.transform.GetComponentInChildren<GridLayoutGroup>();
@@ -78,7 +75,7 @@ namespace LookingGlass.ResizeCommandWindow
             if (t is not null)
             {
                 RectTransform r = t.GetComponent<RectTransform>();//I'm not reading this section, congratulations or I'm sorry that happened...
-                
+
                 float height = Mathf.Min(value, maxHeight) * (r.sizeDelta.x / 8f);
                 //int columnReduction = value <= maxHeight ? 0 : 1;
                 value = value <= maxHeight ? value : value + 1 + value - maxHeight;

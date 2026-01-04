@@ -1,17 +1,12 @@
 ﻿using BepInEx.Configuration;
-using LookingGlass.Base;
 using LeTai.Asset.TranslucentImage;
+using LookingGlass.Base;
 using MonoMod.RuntimeDetour;
-using RoR2;
-using RoR2.UI;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RiskOfOptions;
-using static Rewired.InputMapper;
-using System.Collections.ObjectModel;
+using RoR2;
+using System;
 using System.Reflection;
 
 namespace LookingGlass.CommandWindowBlur
@@ -60,12 +55,12 @@ namespace LookingGlass.CommandWindowBlur
                 t.enabled = !disable.Value;
             }
             BasePlugin.instance.buttonsToCloseMenu.AddCloser(self.panelInstance, networkUIPromptController);
-         
+
         }
 
         void DroneScrapper_OnDisplayBegin(Action<DroneScrapperPickerController, NetworkUIPromptController, LocalUser, CameraRigController> orig, DroneScrapperPickerController self, NetworkUIPromptController networkUIPromptController, LocalUser localUser, CameraRigController cameraRigController)
         {
- 
+
             orig(self, networkUIPromptController, localUser, cameraRigController);
 
             TranslucentImage t = self.panelInstance.gameObject.GetComponentInChildren<TranslucentImage>();

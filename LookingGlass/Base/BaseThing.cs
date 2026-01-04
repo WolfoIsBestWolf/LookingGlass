@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LookingGlass.Base
+﻿namespace LookingGlass.Base
 {
     internal interface BaseThing
     {

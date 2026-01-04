@@ -1,14 +1,12 @@
-﻿using LookingGlass.Base;
+﻿using BepInEx.Configuration;
+using LookingGlass.Base;
+using LookingGlass.HidePickupNotifs;
 using MonoMod.RuntimeDetour;
+using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RiskOfOptions;
 using RoR2;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using BepInEx.Configuration;
-using LookingGlass.HidePickupNotifs;
 using System.Reflection;
 
 namespace LookingGlass.PickupNotifsDuration

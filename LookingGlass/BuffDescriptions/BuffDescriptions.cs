@@ -1,15 +1,15 @@
 ﻿using BepInEx.Configuration;
 using LookingGlass.Base;
 using MonoMod.RuntimeDetour;
+using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
-using RiskOfOptions;
 using RoR2;
 using RoR2.UI;
 using System;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Reflection;
 
 namespace LookingGlass.BuffDescriptions
 {

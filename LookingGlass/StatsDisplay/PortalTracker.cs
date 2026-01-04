@@ -1,16 +1,9 @@
-﻿using BepInEx.Configuration;
-using LookingGlass.Base;
-using LookingGlass.BuffDescriptions;
+﻿using LookingGlass.Base;
 using MonoMod.RuntimeDetour;
 using RoR2;
-using RoR2.UI;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using System.Reflection;
- 
+
 namespace LookingGlass
 {
     internal class PortalTracker : BaseThing
@@ -61,16 +54,16 @@ namespace LookingGlass
             targetMethod = typeof(PortalSpawner).GetMethod(nameof(PortalSpawner.OnWillSpawnUpdated), BindingFlags.NonPublic | BindingFlags.Instance);
             destMethod = typeof(PortalTracker).GetMethod(nameof(TrackPortalSpawner), BindingFlags.NonPublic | BindingFlags.Instance);
             overrideHook2 = new Hook(targetMethod, destMethod, this);
- 
-           new Hook(
-               typeof(PortalDialerController.PortalDialerPerformActionState).GetMethod(nameof(PortalDialerController.PortalDialerPerformActionState.OnEnter), BindingFlags.Public | BindingFlags.Instance),
-               typeof(PortalTracker).GetMethod(nameof(ArtifactPortal), BindingFlags.Public | BindingFlags.Instance)
-               ,this);
+
+            new Hook(
+                typeof(PortalDialerController.PortalDialerPerformActionState).GetMethod(nameof(PortalDialerController.PortalDialerPerformActionState.OnEnter), BindingFlags.Public | BindingFlags.Instance),
+                typeof(PortalTracker).GetMethod(nameof(ArtifactPortal), BindingFlags.Public | BindingFlags.Instance)
+                , this);
 
             new Hook(
              typeof(EntityStates.Missions.AccessCodes.Node.NodesOnAndReady).GetMethod(nameof(EntityStates.Missions.AccessCodes.Node.NodesOnAndReady.OnEnter), BindingFlags.Public | BindingFlags.Instance),
              typeof(PortalTracker).GetMethod(nameof(AccessNode), BindingFlags.Public | BindingFlags.Instance)
-             ,this);
+             , this);
         }
 
         public void ArtifactPortal(Action<PortalDialerController.PortalDialerPerformActionState> orig, PortalDialerController.PortalDialerPerformActionState self)
@@ -142,7 +135,7 @@ namespace LookingGlass
                 {
                     return "<style=cStack>None</style>";
                 }
-                return $"<size={(int)(7f/(7f+portals)*100f)}%>{ActivePortals}</size>";
+                return $"<size={(int)(7f / (7f + portals) * 100f)}%>{ActivePortals}</size>";
             }
         }
 

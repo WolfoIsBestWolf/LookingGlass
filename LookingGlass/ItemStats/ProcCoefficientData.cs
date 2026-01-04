@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace LookingGlass.ItemStatsNameSpace
 {
@@ -200,7 +198,7 @@ namespace LookingGlass.ItemStatsNameSpace
 
             // False son
             skills.Add("FALSESON_PRIMARY_NAME", 1f);        //
-            skillsAdditional.Add("FALSESON_PRIMARY_NAME", "\nMid-Air Charged Proc: <style=cHumanObjective>1.5</style>"); 
+            skillsAdditional.Add("FALSESON_PRIMARY_NAME", "\nMid-Air Charged Proc: <style=cHumanObjective>1.5</style>");
             skills.Add("FALSESON_SECONDARY_NAME", 1f);      //Lunar Spikes
             skills.Add("FALSESON_SECONDARY_ALT1_NAME", 1f); //
             skills.Add("FALSESON_UTILITY_NAME", 1f);        //Step of the Brothers
@@ -208,7 +206,7 @@ namespace LookingGlass.ItemStatsNameSpace
             skills.Add("FALSESON_SPECIAL_NAME", 0.45f);     //
             skillsAdditional.Add("FALSESON_SPECIAL_NAME", "\nTicks: <style=cIsDamage>32</style>, Scales with <style=cIsHealing>Growth</style>"); //??
             skills.Add("FALSESON_SPECIAL_ALT1_NAME", 1f);   //
-                
+
             // Chef
             //Boosted skills do not have unique name tokens (Do have unique desc tho)
             skills.Add("CHEF_PRIMARY_NAME", 1f);        //Cleaver Held / Boosted 1.5
@@ -238,7 +236,7 @@ namespace LookingGlass.ItemStatsNameSpace
             skills.Add("DRONETECH_SPECIAL_NAME", 1f);
             skillsAdditional.Add("DRONETECH_SPECIAL_NAME", "\nNanobug Proc: <style=cIsDamage>0.5</style>");
             skills.Add("DRONETECH_SPECIAL_ALT_NAME", 1f);
-            
+
             //Drifter
             skills.Add("DRIFTER_PRIMARY_NAME", 1f);
             skills.Add("DRIFTER_SECONDARY_NAME", 1f);
