@@ -111,26 +111,25 @@ namespace LookingGlass.ItemCounters
         }
         public static int[] itemCountsPerm = Array.Empty<int>();
         public static int[] itemCountsTemp = Array.Empty<int>();
-        public float needToUpdate = 1f; 
- 
-        public static int NewGetTotalItemStacks(ItemCollection inv, int[] array)
+        public float needToUpdate = 1f;
+
+        public static int NewGetTotalItemStacks(ref ItemCollection inv, int[] perTier)
         {
-            int num = 0;
+            int totalItems = 0;
             ReadOnlySpan<int> itemCounts = inv.inner.GetValuesSpan();
             ReadOnlySpan<SparseIndex> itemIndices = inv.inner.GetNonDefaultIndicesSpan();
             for (int i = 0; i < itemIndices.Length; i++)
             {
-                inv.inner.GetValueSafe(itemIndices[i]);
- 
                 SparseIndex index = itemIndices[i];
-                num += itemCounts[(int)index];
-                int tier = (int)ItemCatalog.GetItemDef((ItemIndex)index).tier;
-                if (tier < array.Length)
+                int count = inv.inner.GetValueSafe(itemIndices[i]);
+                totalItems += count;
+                int tier = (int)ItemCatalog.GetItemDef((ItemIndex)itemIndices[i]).tier;
+                if (tier < perTier.Length)
                 {
-                    array[tier] += itemCounts[(int)index];
+                    perTier[tier] += count;
                 }
             }
-            return num;
+            return totalItems;
         }
 
 
