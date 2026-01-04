@@ -77,7 +77,7 @@ namespace LookingGlass.ItemCounters
             for (int i = 0; i < itemIndices.Length; i++)
             {
                 ItemDef def = ItemCatalog.GetItemDef((ItemIndex)itemIndices[i]);
-                if (!def.hidden)
+                if (def && !def.hidden)
                 {
                     SparseIndex index = itemIndices[i];
                     int count = inv.inner.GetValueSafe(itemIndices[i]);
