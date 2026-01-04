@@ -32,42 +32,14 @@ namespace LookingGlass.ItemCounters
             cfg_TotalTempCounter = BasePlugin.instance.Config.Bind<bool>("Item Counters", "Temp Item Total Counter", true, "Counts your temp item total separately");
             cfg_TieredItemCounters = BasePlugin.instance.Config.Bind<bool>("Item Counters", "Tiered Item Counters", true, "Adds tiered item counters to the scoreboard next to the total item counter.");
             cfg_TieredTempCounters = BasePlugin.instance.Config.Bind<bool>("Item Counters", "Temp Item Counters By Rarity", false, "Counts your temp items in the scoreboard separately by rarity");
-
-            cfg_EffectiveCount.SettingChanged += Cfg_EffectiveCount_SettingChanged;
-            cfg_TotalTempCounter.SettingChanged += Cfg_EffectiveCount_SettingChanged;
-            cfg_TieredItemCounters.SettingChanged += Cfg_EffectiveCount_SettingChanged;
-            cfg_TieredTempCounters.SettingChanged += Cfg_EffectiveCount_SettingChanged;
-
+ 
             var targetMethod = typeof(ScoreboardStrip).GetMethod(nameof(ScoreboardStrip.UpdateItemCountText), BindingFlags.NonPublic | BindingFlags.Instance);
             new Hook(targetMethod, UpdateItemCountText);
             targetMethod = typeof(ScoreboardStrip).GetMethod(nameof(ScoreboardStrip.SetMaster), BindingFlags.Public | BindingFlags.Instance);
             new Hook(targetMethod, SetMaster);
-
-            targetMethod = typeof(ItemInventoryDisplay).GetMethod(nameof(ItemInventoryDisplay.UpdateDisplay), BindingFlags.Public | BindingFlags.Instance);
-            new Hook(targetMethod, SetNeedUpdate);
-
-            /*targetMethod = typeof(ScoreboardController).GetMethod(nameof(ScoreboardController.OnEnable), BindingFlags.NonPublic | BindingFlags.Instance);
-            new Hook(targetMethod, ScoreboardController_onScoreboardOpen);*/
-
+  
         }
-
-        private void Cfg_EffectiveCount_SettingChanged(object sender, EventArgs e)
-        {
-            needToUpdate = 0.1f;
-        }
-
-        private void ScoreboardController_onScoreboardOpen(Action<ScoreboardController> orig, ScoreboardController self)
-        {
-            orig(self);
-        }
-
-        void SetNeedUpdate(Action<ItemInventoryDisplay> orig, ItemInventoryDisplay self)
-        {
-            orig(self);
-            needToUpdate = 0.1f;
-        }
-
-
+ 
         public void SetupRiskOfOptions()
         {
             ModSettingsManager.AddOption(new CheckBoxOption(cfg_EffectiveCount, new CheckBoxConfig() { name = "Count Perm & Temp together for counters", restartRequired = false }));
@@ -87,28 +59,16 @@ namespace LookingGlass.ItemCounters
         void SetMaster(Action<ScoreboardStrip, CharacterMaster> orig, ScoreboardStrip self, CharacterMaster newMaster)
         {
             orig(self, newMaster);
-            /*LayoutElement layout = self.itemCountText != null ? self.itemCountText.GetComponent<LayoutElement>() : self.moneyText.GetComponent<LayoutElement>();
-            if (layout)
-            {
-                //layout.preferredWidth = 300;
-            }*/
             if (self.itemCountText != null)
             {
                 self.itemCountText.m_maxFontSize = 30;
                 self.itemCountText.enableAutoSizing = true;
-                needToUpdate = 0.1f;
+                self.previousItemCount = int.MaxValue;
             }
-            /* if (self.itemCountText && self.itemCountText.transform.childCount == 0)
-             {
-                 GameObject counters2 = GameObject.Instantiate(self.itemCountText.gameObject, self.itemCountText.transform);
-                 self.itemCountText.transform.localPosition = new Vector3(-10f, -5f, 0);
-                 counters2.transform.localPosition = new Vector3(0f, -17f, 0);
-             }*/
         }
         public static int[] itemCountsPerm = Array.Empty<int>();
         public static int[] itemCountsTemp = Array.Empty<int>();
-        public float needToUpdate = 1f;
-
+    
         public static int NewGetTotalItemStacks(ref ItemCollection inv, int[] perTier)
         {
             int totalItems = 0;
@@ -135,18 +95,16 @@ namespace LookingGlass.ItemCounters
 
         public void UpdateItemCountText(Action<ScoreboardStrip> orig, ScoreboardStrip self)
         {
+            int previousItemCount = self.previousItemCount;
             orig(self);
+            if (self.previousItemCount == previousItemCount)
+            {
+                return;
+            }
             if (!self.inventory || (!cfg_TieredItemCounters.Value && !cfg_TotalTempCounter.Value))
             {
                 return;
             }
-            if (needToUpdate < 0)
-            {
-                return;
-            }
-            needToUpdate -= Time.fixedDeltaTime;
-            //Debug.Log("UpdateItemCountText");
-
 
             itemCountsPerm = new int[(int)ItemTier.AssignedAtRuntime];
             itemCountsTemp = new int[(int)ItemTier.AssignedAtRuntime];
