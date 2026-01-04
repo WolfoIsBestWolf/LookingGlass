@@ -113,7 +113,14 @@ namespace LookingGlass.CommandItemCount
         public void OnDisplayBeginStuff()
         {
             isFromOnDisplayBegin = true; // tell the scrapper sorting that it was called from OnDisplayBegin
-            optionMap[0] = -1; // set option map to be "unsorted". Fixes isues with Command Queue picking the wrong item
+            if (optionMap.Count == 0)
+            {
+                optionMap.Add(-1); //This shouldn't ever happen anyways but just in case;
+            }
+            else
+            {
+                optionMap[0] = -1; // set option map to be "unsorted". Fixes isues with Command Queue picking the wrong item
+            }       
         }
 
         //Largely copied from https://github.com/Vl4dimyr/CommandItemCount/blob/master/CommandItemCountPlugin.cs#L191
