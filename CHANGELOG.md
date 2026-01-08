@@ -1,3 +1,6 @@
+## 1.15.2
+Fixed 'Show_Only_On_Tab' setting not working.
+
 ## 1.15.1
 Readded 'orig(self)' to item counters.  
 Fixed issue where having some modded item tiers breaks the item counter.  
