@@ -815,8 +815,13 @@ namespace LookingGlass.ItemStatsNameSpace
             }
             if (pickupIndex != PickupIndex.none)
             {
-                CharacterMasterNotificationQueue.PushPickupNotification(characterMaster, pickupIndex, isTemp, droneTier);
-                PutLastNotificationFirst(characterMaster);
+                PickupDef pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
+                //Filter out LunarCoins and other weird pickups without notifications
+                if (pickupDef.itemIndex != ItemIndex.None || pickupDef.equipmentIndex != EquipmentIndex.None || pickupDef.droneIndex != DroneIndex.None)
+                {
+                    CharacterMasterNotificationQueue.PushPickupNotification(characterMaster, pickupIndex, isTemp, droneTier);
+                    PutLastNotificationFirst(characterMaster);
+                }
             }
         }
 
