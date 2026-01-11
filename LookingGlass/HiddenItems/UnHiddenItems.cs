@@ -6,8 +6,10 @@ using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
+using RoR2.UI;
 using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace LookingGlass.HiddenItems
 {
@@ -22,26 +24,44 @@ namespace LookingGlass.HiddenItems
         public static ConfigEntry<bool> noHiddenItems;
         public void Setup()
         {
-            var targetMethod = typeof(ItemCatalog).GetMethod(nameof(ItemCatalog.Init), BindingFlags.NonPublic | BindingFlags.Static);
-            var destMethod = typeof(UnHiddenItems).GetMethod(nameof(ItemCatalogInit), BindingFlags.NonPublic | BindingFlags.Instance);
-            overrideHook = new Hook(targetMethod, destMethod, this);
             noHiddenItems = BasePlugin.instance.Config.Bind<bool>("Misc", "Unhide Hidden Items", false, "Unhides normally hidden items such as the Drizzle/MonsoonHelpers");
+            noHiddenItems.SettingChanged += NoHiddenItems_SettingChanged;
         }
 
         public void SetupRiskOfOptions()
         {
-            ModSettingsManager.AddOption(new CheckBoxOption(noHiddenItems, new CheckBoxConfig() { restartRequired = true }));
+            ModSettingsManager.AddOption(new CheckBoxOption(noHiddenItems, new CheckBoxConfig() {name = "Unhide Internal Items", restartRequired = false}));
+            ItemCatalog.availability.CallWhenAvailable(CallLate);   
         }
-        void ItemCatalogInit(Action orig)
+        private void CallLate()
+        {
+            //Doesnt work if called in Awake(), so ig call late.
+            NoHiddenItems_SettingChanged(null, null);
+        }
+
+        private void NoHiddenItems_SettingChanged(object _, EventArgs __)
         {
             if (noHiddenItems.Value)
             {
-                foreach (var item in ContentManager.itemDefs)
+                if (overrideHook == null)
                 {
-                    item.hidden = false;
+                    var targetMethod = typeof(ItemInventoryDisplay).GetMethod(nameof(ItemInventoryDisplay.ItemIsVisible), BindingFlags.NonPublic | BindingFlags.Static);
+                    overrideHook = new Hook(targetMethod, ItemIsVisible);
                 }
             }
-            orig();
+            if (!noHiddenItems.Value)
+            {
+                if (overrideHook != null)
+                {
+                    overrideHook.Undo();
+                    overrideHook = null;
+                }
+            }
+        }
+
+        static bool ItemIsVisible(Func<ItemIndex, bool> orig, ItemIndex item)
+        {
+            return true;
         }
     }
 }
