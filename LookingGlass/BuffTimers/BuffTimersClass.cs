@@ -48,7 +48,7 @@ namespace LookingGlass.BuffTimers
             //We ideally would make it so the original code runs always and then just insert it there instead of re-doing it.
 
             orig(self);
-            if (self.source && StatsDisplayClass.cachedUserBody && buffTimers.Value)
+            if (self.source && self.source == StatsDisplayClass.cachedUserBody && buffTimers.Value)
             {
                 foreach (var buffIcon in self.buffIconDisplayData)
                 {
